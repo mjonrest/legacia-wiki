@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="Legacia RO player wiki: rates, Autohunt, Weapon Mastery, events, WoE, VIP and an item finder for every shop.">
 <title>Legacia RO Wiki</title>
+<link rel="icon" type="image/png" href="emblem.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,800;6..12,900&family=JetBrains+Mono:wght@500&display=swap">
@@ -75,8 +76,11 @@ a:focus-visible, input:focus-visible, button:focus-visible, summary:focus-visibl
 /* index */
 .index { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); align-self: start; max-height: calc(100vh - 32px); overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
 @media (max-width: 860px) { .index { position: static; max-height: none; overflow: visible; } }
-.brand { font-family: var(--f-display); font-weight: 700; font-size: 1.2rem; letter-spacing: 0.06em; color: var(--ink); text-decoration: none; }
+.brand { display: flex; align-items: center; gap: 8px; font-family: var(--f-display); font-weight: 700; font-size: 1.2rem; letter-spacing: 0.06em; color: var(--ink); text-decoration: none; }
 .brand span { color: var(--gold); }
+.brand img { width: 36px; height: 36px; flex: none; }
+.hero-logo { display: block; width: min(420px, 100%); height: auto; margin-bottom: 2px; }
+.hero h1.sub { font-size: clamp(1.3rem, 3vw, 1.7rem); letter-spacing: 0.12em; color: #ffd583; }
 .toc summary { cursor: pointer; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); list-style: none; }
 .toc summary::-webkit-details-marker { display: none; }
 @media (min-width: 861px) { .toc summary { pointer-events: none; } }
@@ -221,7 +225,7 @@ mark { background: var(--gold-soft); color: inherit; padding: 0 1px; border-radi
 
 <div class="shell">
   <aside class="index">
-    <a class="brand" href="#top">Legacia <span>RO</span> Wiki</a>
+    <a class="brand" href="#top"><img src="emblem.png" width="36" height="36" alt="">Legacia <span>RO</span> Wiki</a>
     <details class="toc" id="toc" open>
       <summary>Chapters</summary>
       <ol id="toclist"></ol>
@@ -232,8 +236,9 @@ mark { background: var(--gold-soft); color: inherit; padding: 0 1px; border-radi
     <header class="hero">
       <div class="hero-top">
         <div class="txt">
+          <img class="hero-logo" src="logo.png" width="720" height="453" alt="Legacia Ragnarok">
+          <h1 class="sub">Player Wiki</h1>
           <span class="kicker">Your character. Your legacy.</span>
-          <h1>Legacia RO Player Wiki</h1>
           <p>Everything about Legacia in one place. Look at the big numbers, search any item, and only open "Read more" when you want the details.</p>
         </div>
         <img class="poster" src="poster.jpg" width="519" height="779" alt="Legacia Ragnarok poster: Compete, Progress, Customize, Identity. Low rate, friendly drops, no bots.">

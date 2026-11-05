@@ -67,5 +67,7 @@ jobs:
             cd $FTP_DIR;
             put index.html;
             put poster.jpg;
+            put logo.png;
+            put emblem.png;
             bye"
           echo "Uploaded index.html to $FTP_DIR"
