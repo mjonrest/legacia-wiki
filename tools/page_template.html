@@ -1,0 +1,794 @@
+<title>Legacia RO Wiki</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Nunito+Sans:opsz,wght@6..12,400;6..12,600;6..12,800;6..12,900&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: an adventurer's handbook. Sticky chapter index left; right column opens with quick start + item finder,
+   then chapters that lead with big "at a glance" chips and tuck the details into "Read more". */
+:root {
+  --bg: #eef1f6;
+  --surface: #ffffff;
+  --ink: #18202e;
+  --muted: #586379;
+  --line: #d6dce7;
+  --accent: #2a4bb0;
+  --accent-soft: #e3e9fa;
+  --gold: #9a6812;
+  --gold-soft: #f7ecd6;
+  --green: #1d7a4c;
+  --green-soft: #ddf3e7;
+  --rose: #b0304f;
+  --rose-soft: #fbe3e9;
+  --violet: #6a3fb5;
+  --violet-soft: #ece4fb;
+  --teal: #0f7480;
+  --teal-soft: #dcf2f4;
+  --warn: #a2361f;
+  --warn-soft: #fbe6e1;
+  --code-bg: #e8ecf4;
+  --hero-a: #1d2b5c;
+  --hero-b: #33479a;
+  --hero-ink: #f4f6ff;
+  --f-display: "Cinzel", "Trajan Pro", Georgia, serif;
+  --f-body: "Nunito Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1320; --surface: #161d2d; --ink: #e5e9f2; --muted: #9aa4b8; --line: #283247;
+    --accent: #8ea8ff; --accent-soft: #1f2a48; --gold: #e2b65e; --gold-soft: #33291a;
+    --green: #6fd7a1; --green-soft: #15302a; --rose: #ff8fab; --rose-soft: #3a1c27;
+    --violet: #c2a6ff; --violet-soft: #2a2145; --teal: #6ad3de; --teal-soft: #13303a;
+    --warn: #ff9b85; --warn-soft: #3a1f1a; --code-bg: #1f2738;
+    --hero-a: #18214a; --hero-b: #26357a; --hero-ink: #f4f6ff; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1320; --surface: #161d2d; --ink: #e5e9f2; --muted: #9aa4b8; --line: #283247;
+  --accent: #8ea8ff; --accent-soft: #1f2a48; --gold: #e2b65e; --gold-soft: #33291a;
+  --green: #6fd7a1; --green-soft: #15302a; --rose: #ff8fab; --rose-soft: #3a1c27;
+  --violet: #c2a6ff; --violet-soft: #2a2145; --teal: #6ad3de; --teal-soft: #13303a;
+  --warn: #ff9b85; --warn-soft: #3a1f1a; --code-bg: #1f2738;
+  --hero-a: #18214a; --hero-b: #26357a; --hero-ink: #f4f6ff; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 16px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; animation: none !important; } }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: 1rem; line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+a { color: var(--accent); }
+a:focus-visible, input:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.shell { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 36px; padding-block: 28px 64px; }
+@media (max-width: 860px) { .shell { grid-template-columns: minmax(0, 1fr); gap: 16px; padding-block: 16px 48px; } }
+
+/* index */
+.index { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); align-self: start; max-height: calc(100vh - 32px); overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
+@media (max-width: 860px) { .index { position: static; max-height: none; overflow: visible; } }
+.brand { font-family: var(--f-display); font-weight: 700; font-size: 1.2rem; letter-spacing: 0.06em; color: var(--ink); text-decoration: none; }
+.brand span { color: var(--gold); }
+.toc summary { cursor: pointer; font-size: 0.8rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); list-style: none; }
+.toc summary::-webkit-details-marker { display: none; }
+@media (min-width: 861px) { .toc summary { pointer-events: none; } }
+@media (max-width: 860px) { .toc summary { border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; background: var(--surface); } .toc summary::after { content: " +"; } .toc[open] summary::after { content: " \2212"; } }
+.toc ol { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 1px; }
+.toc a { display: flex; align-items: center; gap: 8px; padding: 5px 10px; border-radius: 6px; text-decoration: none; color: var(--ink); font-size: 0.92rem; }
+.toc a:hover { background: var(--accent-soft); }
+.toc a.on { background: var(--accent-soft); color: var(--accent); font-weight: 800; }
+.toc .grp { margin-top: 10px; padding: 0 10px; font-size: 0.72rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); }
+.toc .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; background: var(--c, var(--accent)); }
+
+main { min-width: 0; display: flex; flex-direction: column; gap: 22px; }
+
+/* hero */
+.hero { position: relative; overflow: hidden; border-radius: 18px; padding: 34px 32px 28px; color: var(--hero-ink);
+  background: radial-gradient(120% 140% at 100% 0%, var(--hero-b) 0%, var(--hero-a) 60%); display: flex; flex-direction: column; gap: 18px; }
+.hero::after { content: ""; position: absolute; right: -60px; top: -60px; width: 260px; height: 260px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.12); box-shadow: 0 0 0 26px rgba(255,255,255,0.04), 0 0 0 60px rgba(255,255,255,0.03); pointer-events: none; }
+.hero .kicker { font-size: 0.78rem; font-weight: 900; letter-spacing: 0.16em; text-transform: uppercase; color: #ffd583; }
+.hero h1 { margin: 0; font-family: var(--f-display); font-weight: 900; font-size: clamp(2rem, 5vw, 3rem); line-height: 1.05; letter-spacing: 0.03em; text-wrap: balance; }
+.hero p { margin: 0; max-width: 56ch; color: rgba(244,246,255,0.82); }
+.ratebar { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 10px; position: relative; z-index: 1; }
+.rate { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.16); border-radius: 12px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+.rate b { font-family: var(--f-display); font-size: 1.6rem; line-height: 1.1; font-variant-numeric: tabular-nums; color: #fff; }
+.rate small { color: rgba(244,246,255,0.7); font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; font-weight: 800; }
+
+/* quick start */
+.quick { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+.qs { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px; display: flex; flex-direction: column; gap: 6px; text-decoration: none; color: var(--ink); transition: transform .15s ease, border-color .15s ease; }
+.qs:hover { transform: translateY(-2px); border-color: var(--c); }
+.qs .n { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font-weight: 900; background: var(--cs); color: var(--c); }
+.qs b { font-size: 1rem; line-height: 1.25; }
+.qs span { font-size: 0.86rem; color: var(--muted); line-height: 1.4; }
+.qs code { font-size: 0.82em; }
+.sechead { font-family: var(--f-display); font-weight: 700; font-size: 1.15rem; letter-spacing: 0.04em; margin: 4px 0 -8px; }
+
+/* sections */
+section { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 22px 26px; display: flex; flex-direction: column; gap: 12px; border-top: 4px solid var(--c, var(--accent)); }
+@media (max-width: 560px) { section { padding: 18px 16px; } .hero { padding: 24px 18px 20px; } }
+section > * { margin: 0; max-width: 74ch; }
+section > .tbl, section > .cards, section > .glance, section > details, section > .finder-ui, section > .results { max-width: none; }
+h2 { font-family: var(--f-display); font-weight: 700; font-size: 1.5rem; letter-spacing: 0.03em; line-height: 1.2; text-wrap: balance; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+h2 .ico { width: 38px; height: 38px; border-radius: 10px; display: grid; place-items: center; background: var(--cs, var(--accent-soft)); color: var(--c, var(--accent)); flex: none; }
+h2 .ico svg { width: 22px; height: 22px; }
+h2 .where { font-family: var(--f-body); font-size: 0.84rem; font-weight: 700; color: var(--muted); letter-spacing: 0; }
+h3 { font-size: 1.1rem; font-weight: 800; margin-top: 4px !important; }
+.lead { font-size: 1.05rem; }
+p, li { text-wrap: pretty; }
+ul, ol.steps { padding-left: 1.2em; display: flex; flex-direction: column; gap: 4px; }
+code, kbd { font-family: var(--f-mono); font-size: 0.86em; background: var(--code-bg); padding: 1px 6px; border-radius: 5px; white-space: nowrap; }
+
+/* at a glance chips */
+.glance { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+.chip { border-radius: 12px; padding: 10px 12px; background: var(--cs, var(--accent-soft)); display: flex; flex-direction: column; gap: 0; min-width: 0; }
+.chip b { font-size: 1.25rem; font-weight: 900; line-height: 1.2; color: var(--c, var(--accent)); font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.chip span { font-size: 0.8rem; font-weight: 700; color: var(--ink); opacity: 0.8; line-height: 1.3; }
+
+details.more { border: 1px dashed var(--line); border-radius: 12px; padding: 0 14px; }
+details.more > summary { cursor: pointer; padding: 10px 0; font-weight: 800; color: var(--c, var(--accent)); list-style: none; }
+details.more > summary::-webkit-details-marker { display: none; }
+details.more > summary::before { content: "\25B8  "; }
+details.more[open] > summary::before { content: "\25BE  "; }
+details.more > *:not(summary) { margin: 0 0 12px; }
+details.more > ul { margin-left: 0; }
+
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.92rem; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+th { font-size: 0.74rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); background: var(--bg); font-weight: 800; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.note { border-radius: 10px; padding: 10px 14px; background: var(--accent-soft); font-size: 0.94rem; }
+.note.gold { background: var(--gold-soft); }
+.note.warn { background: var(--warn-soft); }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.card { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.card h4 { margin: 0; font-size: 1.05rem; font-weight: 900; }
+.card .stat { font-size: 0.74rem; font-weight: 900; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); }
+.card p { margin: 0; font-size: 0.9rem; color: var(--muted); }
+.tag { display: inline-block; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; background: var(--gold-soft); color: var(--gold); vertical-align: middle; }
+.foot { color: var(--muted); font-size: 0.84rem; text-align: center; }
+
+/* item finder */
+.finder-ui { display: flex; flex-direction: column; gap: 10px; }
+.bigsearch { position: relative; }
+.bigsearch svg { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); width: 20px; height: 20px; color: var(--muted); pointer-events: none; }
+.bigsearch input { width: 100%; font: inherit; font-size: 1.05rem; padding: 14px 14px 14px 44px; border-radius: 12px; border: 2px solid var(--line); background: var(--bg); color: var(--ink); }
+.bigsearch input:focus { border-color: var(--teal); outline: none; }
+.filters { display: flex; flex-wrap: wrap; gap: 6px; }
+.filters button { font: inherit; font-size: 0.82rem; font-weight: 800; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); color: var(--ink); cursor: pointer; }
+.filters button[aria-pressed="true"] { background: var(--teal); border-color: var(--teal); color: var(--surface); }
+.count { font-size: 0.86rem; color: var(--muted); }
+.results { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 10px; }
+.item { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.item .top { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.item .name { font-weight: 900; line-height: 1.3; overflow-wrap: anywhere; }
+.item .id { font-family: var(--f-mono); font-size: 0.75rem; color: var(--muted); white-space: nowrap; }
+.item .type { align-self: flex-start; font-size: 0.68rem; font-weight: 900; letter-spacing: 0.08em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; background: var(--violet-soft); color: var(--violet); }
+.src { border-top: 1px solid var(--line); padding-top: 6px; display: flex; flex-direction: column; gap: 1px; font-size: 0.86rem; }
+.src b { color: var(--teal); }
+.src .w { color: var(--muted); font-size: 0.8rem; }
+.src .c { overflow-wrap: anywhere; }
+.src .d { color: var(--muted); font-size: 0.78rem; font-style: italic; }
+.moresrc { font: inherit; font-size: 0.8rem; font-weight: 800; color: var(--teal); background: none; border: 0; padding: 0; cursor: pointer; text-align: left; }
+.showmore { justify-self: center; font: inherit; font-weight: 800; padding: 8px 18px; border-radius: 999px; border: 2px solid var(--teal); color: var(--teal); background: var(--surface); cursor: pointer; }
+mark { background: var(--gold-soft); color: inherit; padding: 0 1px; border-radius: 3px; }
+</style>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2.4"/><path d="M16.5 16.5L21 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></symbol>
+    <symbol id="i-sword" viewBox="0 0 24 24"><path d="M14 3h7v7L10 21l-3-3L18 7" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M5 14l5 5M3 21l3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-robot" viewBox="0 0 24 24"><rect x="4" y="8" width="16" height="11" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="13.5" r="1.6" fill="currentColor"/><circle cx="15" cy="13.5" r="1.6" fill="currentColor"/><path d="M12 8V4M10 4h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-party" viewBox="0 0 24 24"><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="16.5" cy="9" r="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M2.5 19c.6-3.2 2.8-5 5.5-5s4.9 1.8 5.5 5M14 14.3c.8-.4 1.6-.6 2.5-.6 2.3 0 4.2 1.5 4.8 4.3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M3.5 10h17M8 3v4M16 3v4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M8.5 14.5l2 2 4-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-dice" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="9" r="1.5" fill="currentColor"/><circle cx="15" cy="15" r="1.5" fill="currentColor"/><circle cx="15" cy="9" r="1.5" fill="currentColor"/><circle cx="9" cy="15" r="1.5" fill="currentColor"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7.5V12l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-skull" viewBox="0 0 24 24"><path d="M12 3c-4.4 0-8 3.2-8 7.4 0 2.5 1.3 4.3 3 5.3V19h10v-3.3c1.7-1 3-2.8 3-5.3C20 6.2 16.4 3 12 3z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><circle cx="9" cy="11" r="1.8" fill="currentColor"/><circle cx="15" cy="11" r="1.8" fill="currentColor"/></symbol>
+    <symbol id="i-dragon" viewBox="0 0 24 24"><path d="M4 18c2-1 3-3 3-6 0-3 2.5-6 6-6 2.5 0 4 1 5 2l2-1-.5 3c.3 1 .5 2 .5 3 0 3.5-2.5 6-6 6H7" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="15" cy="10" r="1.3" fill="currentColor"/></symbol>
+    <symbol id="i-crown" viewBox="0 0 24 24"><path d="M3.5 8l4.5 4 4-6 4 6 4.5-4-2 11h-13z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-castle" viewBox="0 0 24 24"><path d="M4 20V9h3V6h2v3h2V5h2v4h2V6h2v3h3v11zM10 20v-4a2 2 0 0 1 4 0v4" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-pvp" viewBox="0 0 24 24"><path d="M4 4l9 9M20 4l-9 9M7 15l-3 3 2 2 3-3M17 15l3 3-2 2-3-3" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-hat" viewBox="0 0 24 24"><path d="M3 17c3 1.5 15 1.5 18 0M6 16.5L9 6h6l3 10.5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8 12h8" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="i-anvil" viewBox="0 0 24 24"><path d="M3 7h13c0 3 2 4 5 4v1h-6l-1 3h2v4H8v-4h2l-1-3c-3 0-6-2-6-5z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-paw" viewBox="0 0 24 24"><circle cx="7" cy="10" r="2" fill="currentColor"/><circle cx="17" cy="10" r="2" fill="currentColor"/><circle cx="10" cy="6" r="2" fill="currentColor"/><circle cx="14" cy="6" r="2" fill="currentColor"/><path d="M12 12c-3 0-5.5 3.5-5.5 5.5 0 2 2 2.5 5.5 1.5 3.5 1 5.5.5 5.5-1.5S15 12 12 12z" fill="currentColor"/></symbol>
+    <symbol id="i-gem" viewBox="0 0 24 24"><path d="M7 4h10l4 5-9 11L3 9z M3 9h18M9.5 4L8 9l4 11 4-11-1.5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-coin" viewBox="0 0 24 24"><ellipse cx="12" cy="7" rx="7" ry="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 7v5c0 1.7 3.1 3 7 3s7-1.3 7-3V7M5 12v5c0 1.7 3.1 3 7 3s7-1.3 7-3v-5" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="i-pumpkin" viewBox="0 0 24 24"><path d="M12 7c-5 0-8 3-8 6.5S7 20 12 20s8-3 8-6.5S17 7 12 7z M12 7c-2 2-2 11 0 13M12 7c2 2 2 11 0 13M12 7c0-2 1-3 3-4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l8 3v6c0 4.5-3.4 8-8 9-4.6-1-8-4.5-8-9V6z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M8.5 12l2.5 2.5 4.5-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2z M9 4v14M15 6v14" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-cmd" viewBox="0 0 24 24"><rect x="3" y="4.5" width="18" height="15" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M7 10l3 2.5L7 15M12 15h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-rates" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  </defs>
+</svg>
+
+<div class="shell">
+  <aside class="index">
+    <a class="brand" href="#top">Legacia <span>RO</span> Wiki</a>
+    <details class="toc" id="toc" open>
+      <summary>Chapters</summary>
+      <ol id="toclist"></ol>
+    </details>
+  </aside>
+
+  <main id="top">
+    <header class="hero">
+      <span class="kicker">Pre-renewal · Mid rate · Free to play</span>
+      <h1>Legacia RO Player Wiki</h1>
+      <p>Everything about Legacia in one place. Look at the big numbers, search any item, and only open "Read more" when you want the details.</p>
+      <div class="ratebar" aria-label="Server rates">
+        <div class="rate"><small>Base / Job EXP</small><b>5x</b></div>
+        <div class="rate"><small>Weekends</small><b>10x</b></div>
+        <div class="rate"><small>Normal cards</small><b>0.5%</b></div>
+        <div class="rate"><small>Equip drops</small><b>25x</b></div>
+        <div class="rate"><small>Free autohunt</small><b>3h/day</b></div>
+        <div class="rate"><small>Max stat</small><b>99</b></div>
+      </div>
+    </header>
+
+    <h2 class="sechead">New here? Do these 5 things</h2>
+    <div class="quick">
+      <a class="qs" href="#start" style="--c:var(--gold);--cs:var(--gold-soft)"><span class="n">1</span><b>Claim Freebies</b><span>Kafra in Prontera: 3 days VIP, costumes, potions, manuals.</span></a>
+      <a class="qs" href="#autohunt" style="--c:var(--teal);--cs:var(--teal-soft)"><span class="n">2</span><b>Type <code>@ah</code></b><span>Your character hunts by itself. 3 hours free every day.</span></a>
+      <a class="qs" href="#mastery" style="--c:var(--rose);--cs:var(--rose-soft)"><span class="n">3</span><b>Type <code>@wi</code></b><span>Weapon Mastery grows as you hunt and makes you stronger.</span></a>
+      <a class="qs" href="#daily" style="--c:var(--green);--cs:var(--green-soft)"><span class="n">4</span><b>Type <code>@dailyquest</code></b><span>5 easy tasks a day for free headgears and potions.</span></a>
+      <a class="qs" href="#party" style="--c:var(--violet);--cs:var(--violet-soft)"><span class="n">5</span><b>Join a party</b><span>Every member gets their own roll on MVP drops.</span></a>
+    </div>
+
+    <!-- ===================== ITEM FINDER ===================== -->
+    <section id="items" data-group="Find items" style="--c:var(--teal);--cs:var(--teal-soft)">
+      <h2><span class="ico"><svg><use href="#i-search"/></svg></span>Item finder</h2>
+      <p>Type an item name or ID to see where to get it and what it costs. Covers the Quest Shop, Tool Dealer, Cash Shop, Gacha Machine, Daily / Hourly / Devil Square shops, Pet Groomer and bonus monster drops.</p>
+      <div class="finder-ui">
+        <div class="bigsearch"><svg><use href="#i-search"/></svg><input id="iq" type="search" placeholder="Try: Sloth Hat, Fly Wing, 5086, wings..." aria-label="Search items" autocomplete="off"></div>
+        <div class="filters" id="filters" role="group" aria-label="Filter by where you get it"></div>
+        <div class="count" id="icount" aria-live="polite"></div>
+      </div>
+      <div class="results" id="results"></div>
+      <button class="showmore" id="showmore" type="button" hidden>Show more items</button>
+    </section>
+
+    <!-- ===================== BASICS ===================== -->
+    <section id="rates" data-group="The basics" style="--c:var(--accent);--cs:var(--accent-soft)">
+      <h2><span class="ico"><svg><use href="#i-rates"/></svg></span>Server rates</h2>
+      <div class="glance">
+        <div class="chip"><b>5x</b><span>Base and Job EXP</span></div>
+        <div class="chip"><b>10x</b><span>EXP Fri 00:00 to Mon 00:00</span></div>
+        <div class="chip"><b>0.5%</b><span>Most normal monster cards</span></div>
+        <div class="chip"><b>0.1%</b><span>Boss and MVP cards</span></div>
+        <div class="chip"><b>3x</b><span>Homunculus growth</span></div>
+      </div>
+      <details class="more">
+        <summary>Read more: full drop table</summary>
+        <div class="tbl"><table>
+          <thead><tr><th>What</th><th class="num">Normal</th><th class="num">Boss</th><th class="num">MVP</th></tr></thead>
+          <tbody>
+            <tr><td>Common / healing / usable items</td><td class="num">10x</td><td class="num">10x</td><td class="num">10x</td></tr>
+            <tr><td>Equipment</td><td class="num">25x</td><td class="num">5x</td><td class="num">5x</td></tr>
+            <tr><td>Cards (0.01% base)</td><td class="num">50x</td><td class="num">10x</td><td class="num">10x</td></tr>
+            <tr><td>MVP reward box items</td><td class="num">-</td><td class="num">-</td><td class="num">1x</td></tr>
+          </tbody>
+        </table></div>
+        <ul>
+          <li>Pre-renewal: classic skills and mechanics, Trans and Baby classes.</li>
+          <li>Death costs 1% of your Base and Job EXP.</li>
+          <li>Party EXP share works within a 20 level gap.</li>
+          <li>Monster equipment drops can roll <strong>random options</strong>. They drop unidentified, so use a Magnifier.</li>
+          <li><code>@rates</code> shows the live rates in game.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section id="start" data-group="The basics" style="--c:var(--gold);--cs:var(--gold-soft)">
+      <h2><span class="ico"><svg><use href="#i-star"/></svg></span>Getting started <span class="where">Prontera</span></h2>
+      <div class="glance">
+        <div class="chip"><b>3 days</b><span>Free VIP from Freebies</span></div>
+        <div class="chip"><b>Free</b><span>Heal + buffs at Legacia Support</span></div>
+        <div class="chip"><b>Auto</b><span>Platinum skills on job change</span></div>
+      </div>
+      <ol class="steps">
+        <li><strong>Kafra Employee</strong> (145,197) → <em>Claim Freebies</em>. Once per computer.</li>
+        <li><strong>Job Master</strong> (164,195) for job changes, Rebirth and Baby classes.</li>
+        <li><strong>Legacia Support</strong> (153,193, and in most towns) heals and buffs you for free.</li>
+        <li><strong>Warper</strong> stands in every town.</li>
+      </ol>
+      <details class="more">
+        <summary>Read more: what's in Freebies</summary>
+        <p>3 days of VIP, two random Poring costumes, 5 MVP Soul, 6 Light White Potion boxes, 6 Blue Potion boxes, 3 Battle Manuals and 3 JOB Battle Manuals.</p>
+      </details>
+    </section>
+
+    <section id="npcs" data-group="The basics" style="--c:var(--accent);--cs:var(--accent-soft)">
+      <h2><span class="ico"><svg><use href="#i-map"/></svg></span>Prontera NPC map</h2>
+      <p>Type <code>/navi prontera x/y</code> in chat to get an arrow to any NPC.</p>
+      <details class="more" open>
+        <summary>NPC list</summary>
+        <div class="tbl"><table>
+          <thead><tr><th>NPC</th><th class="num">x,y</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td>Kafra Employee</td><td class="num">145,197</td><td>Save, Storage, VIP Storage 1-6, Freebies, resets, Platinum skills, rental, promo codes</td></tr>
+            <tr><td>Legacia Support</td><td class="num">153,193</td><td>Free heal and buffs</td></tr>
+            <tr><td>WOE Information</td><td class="num">149,193</td><td>WoE schedule, rankings, reward claim</td></tr>
+            <tr><td>Job Master</td><td class="num">164,195</td><td>Job changes</td></tr>
+            <tr><td>Ladder</td><td class="num">166,198</td><td>PvP ranking</td></tr>
+            <tr><td>MVP List</td><td class="num">157,198</td><td>Which MVPs are alive</td></tr>
+            <tr><td>Jack the Pumpkin Keeper</td><td class="num">159,183</td><td>Halloween event (until Nov 15)</td></tr>
+            <tr><td>MvP Rank</td><td class="num">140,182</td><td>Monthly MVP ranking</td></tr>
+            <tr><td>Devil Square Guardian</td><td class="num">138,176</td><td>Devil Square + shop</td></tr>
+            <tr><td>VIP Account</td><td class="num">147,174</td><td>Buy VIP, daily VIP reward</td></tr>
+            <tr><td>World Boss</td><td class="num">136,171</td><td>Soul count, summon</td></tr>
+            <tr><td>Weapon Mastery Guide</td><td class="num">147,170</td><td>Explains masteries</td></tr>
+            <tr><td>Extra Drop Info</td><td class="num">164,170</td><td>Bonus costume drops</td></tr>
+            <tr><td>Quest Shop</td><td class="num">147,166</td><td>Headgear crafting</td></tr>
+            <tr><td>PvP-StatsViewer</td><td class="num">147,163</td><td>PvP stats</td></tr>
+            <tr><td>Tool Dealer</td><td class="num">164,175</td><td>Potions, ninja and gun ammo</td></tr>
+            <tr><td>Stylist</td><td class="num">173,179</td><td>Hair and cloth</td></tr>
+            <tr><td>Gacha Machine</td><td class="num">131,216</td><td>Costume gacha</td></tr>
+            <tr><td>Costume Enchanter</td><td class="num">138,223</td><td>Costume enchants</td></tr>
+            <tr><td>Plagiarism Master</td><td class="num">128,213</td><td>Rogue / Stalker copied skill</td></tr>
+            <tr><td>Fallen Luhir</td><td class="num">140,125</td><td>Fallen Angel Wing enchants</td></tr>
+            <tr><td>Refine Master</td><td class="num">prt_in 56,54</td><td>Safe refine with tickets</td></tr>
+            <tr><td>Wise Old Woman</td><td class="num">prt_in 28,73</td><td>Card remover</td></tr>
+            <tr><td>Perchik</td><td class="num">prt_in 24,61</td><td>Signs your name on gear</td></tr>
+          </tbody>
+        </table></div>
+      </details>
+    </section>
+
+    <section id="commands" data-group="The basics" style="--c:var(--violet);--cs:var(--violet-soft)">
+      <h2><span class="ico"><svg><use href="#i-cmd"/></svg></span>Player commands</h2>
+      <div class="glance">
+        <div class="chip"><b>@ah</b><span>Autohunt menu</span></div>
+        <div class="chip"><b>@wi</b><span>Weapon Mastery</span></div>
+        <div class="chip"><b>@dailyquest</b><span>Daily tasks + shop</span></div>
+        <div class="chip"><b>@statsview</b><span>All your stats</span></div>
+        <div class="chip"><b>@autopot</b><span>Auto potion</span></div>
+      </div>
+      <details class="more">
+        <summary>Read more: every command</summary>
+        <div class="tbl"><table>
+          <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td><code>@ah</code></td><td>Autohunt: start, stop, offline, skills, potions, teleport, loot</td></tr>
+            <tr><td><code>@wi</code> / <code>@weaponinfo</code></td><td>Weapon Mastery level and bonuses. <code>@wi Ranged</code> checks one</td></tr>
+            <tr><td><code>@dailyquest</code></td><td>Daily Quest and Daily Point Shop</td></tr>
+            <tr><td><code>@statsview</code></td><td>Breakdown of your stats and item bonuses</td></tr>
+            <tr><td><code>@woerank</code></td><td>WoE player ranking</td></tr>
+            <tr><td><code>@pvpladder</code></td><td>PvP ladder</td></tr>
+            <tr><td><code>@halloween</code></td><td>Halloween event progress</td></tr>
+            <tr><td><code>@autopot</code></td><td>Auto potion for normal play</td></tr>
+            <tr><td><code>@activity</code></td><td>Activity Point messages on/off</td></tr>
+            <tr><td><code>@autoloot</code>, <code>@alootid</code>, <code>@autoloottype</code></td><td>Auto pick up by rate, item or type</td></tr>
+            <tr><td><code>@whodrops</code>, <code>@mobinfo</code>, <code>@iteminfo</code></td><td>Look up drops, monsters, items</td></tr>
+            <tr><td><code>@rates</code>, <code>@exp</code>, <code>@showexp</code>, <code>@showzeny</code></td><td>Rates and gain messages</td></tr>
+            <tr><td><code>@autotrade</code></td><td>Keep your vending shop open after logout</td></tr>
+            <tr><td><code>@go</code>, <code>@refresh</code>, <code>@time</code></td><td>Town warp, fix desync, server time</td></tr>
+            <tr><td><code>@duel</code>, <code>@invite</code>, <code>@accept</code>, <code>@reject</code>, <code>@leave</code></td><td>Duels</td></tr>
+            <tr><td><code>@hominfo</code>, <code>@homstats</code></td><td>Homunculus info</td></tr>
+            <tr><td><code>@request</code></td><td>Message online GMs</td></tr>
+            <tr><td><code>@commands</code></td><td>Every command you can use</td></tr>
+          </tbody>
+        </table></div>
+      </details>
+    </section>
+
+    <!-- ===================== SYSTEMS ===================== -->
+    <section id="autohunt" data-group="Legacia systems" style="--c:var(--teal);--cs:var(--teal-soft)">
+      <h2><span class="ico"><svg><use href="#i-robot"/></svg></span>Autohunt <span class="where"><code>@ah</code></span></h2>
+      <p class="lead">Built-in auto attack. Your character explores, fights with your skills, drinks potions, teleports and loots. No bots needed (and bots are banned).</p>
+      <div class="glance">
+        <div class="chip"><b>3 hours</b><span>Free every day</span></div>
+        <div class="chip"><b>50%</b><span>EXP, drops and Mastery EXP while autohunting</span></div>
+        <div class="chip"><b>Offline</b><span>Log out and keep hunting</span></div>
+        <div class="chip"><b>17 CP</b><span>Per extra hour (Cash Shop)</span></div>
+      </div>
+      <details class="more">
+        <summary>Read more: settings and limits</summary>
+        <div class="tbl"><table>
+          <thead><tr><th>Option</th><th>What it does</th></tr></thead>
+          <tbody>
+            <tr><td>Start / Stop / Offline</td><td>Hunt on your current map. Offline logs you out; log in again to stop.</td></tr>
+            <tr><td>Attack skills</td><td>Up to 3 skills, tried in order. Normal attack if none can be used.</td></tr>
+            <tr><td>Buff skills</td><td>Up to 3 self buffs, recast when they run out.</td></tr>
+            <tr><td>Auto potion</td><td>One HP and one SP potion, below the % you set.</td></tr>
+            <tr><td>Auto teleport</td><td>After 1-60 s with no monster. Teleport skill, Infinite Fly Wing, Fly Wing, or Auto.</td></tr>
+            <tr><td>Crowd teleport</td><td>Teleports when 2-30 monsters are within 3 cells.</td></tr>
+            <tr><td>Ignore monsters</td><td>Skip up to 20 monsters.</td></tr>
+            <tr><td>MVP</td><td>Avoid (default) or attack MVPs.</td></tr>
+            <tr><td>Autoloot</td><td>Everything, ≤50/10/1/0.1%, custom %, or off.</td></tr>
+          </tbody>
+        </table></div>
+        <ul>
+          <li>Free time resets at midnight and is shared by your account and your computer.</li>
+          <li>Extra time: 1 h 17 CP, 5 h 85 CP, 24 h 408 CP. Bought time never expires.</li>
+          <li>Max 2 characters per computer autohunting, only 1 of them offline.</li>
+          <li>Avoids warp portals and doesn't steal other players' monsters. Shows an [AutoHunt] tag and blue aura.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section id="mastery" data-group="Legacia systems" style="--c:var(--rose);--cs:var(--rose-soft)">
+      <h2><span class="ico"><svg><use href="#i-sword"/></svg></span>Weapon Mastery <span class="where"><code>@wi</code></span></h2>
+      <p class="lead">Hunt with a weapon and its mastery levels up, up to <strong>Lv 128</strong>. Only the <strong>right-hand</strong> weapon counts.</p>
+      <div class="cards">
+        <div class="card"><span class="stat">STR</span><h4>Onslaught</h4><p>Swords, spears, axes, maces, knuckles. Damage vs all, Base ATK, crit damage, splash at Lv 128.</p></div>
+        <div class="card"><span class="stat">AGI</span><h4>Swiftness</h4><p>Daggers, katars, Fuuma, books. ASPD, move speed, Flee, Double Attack, HP drain at Lv 128.</p></div>
+        <div class="card"><span class="stat">DEX</span><h4>Ranged</h4><p>Bows, instruments, whips, guns. Damage vs all, ranged damage, ASPD, +2 range at Lv 128.</p></div>
+        <div class="card"><span class="stat">INT</span><h4>Mystical</h4><p>Rods, staves, some magic daggers/swords. MATK, magic damage, cast time, SP, no cast cancel at Lv 128.</p></div>
+      </div>
+      <details class="more">
+        <summary>Read more: how leveling works</summary>
+        <ul>
+          <li>Mastery EXP comes from the Job EXP of your kills. Higher level weapons give more.</li>
+          <li>Party members on the map get 50% of your mastery EXP.</li>
+          <li>Bonuses scale with your base stat (STR/AGI/DEX/INT without gear).</li>
+          <li>The Weapon Mastery Guide (prontera 147,170) lists every bonus.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section id="party" data-group="Legacia systems" style="--c:var(--violet);--cs:var(--violet-soft)">
+      <h2><span class="ico"><svg><use href="#i-party"/></svg></span>Party MVP drop share</h2>
+      <p class="lead">Your party kills an MVP → <strong>every member on the map rolls the full MVP drop table</strong> for themselves. A 0.1% card is 0.1% for each of you.</p>
+      <div class="glance">
+        <div class="chip"><b>Everyone</b><span>Gets their own drop roll</span></div>
+        <div class="chip"><b>≤1%</b><span>Rare drops announced server-wide</span></div>
+        <div class="chip"><b>50%</b><span>Mastery EXP shared</span></div>
+      </div>
+      <details class="more">
+        <summary>Read more</summary>
+        <ul>
+          <li>Works for quest and instance MVPs too, like Ktullanux and Thanatos Phantom.</li>
+          <li>Shared drops arrive unidentified. The killer keeps the normal drop.</li>
+          <li>Alts on the same computer don't get a roll.</li>
+        </ul>
+      </details>
+    </section>
+
+    <!-- ===================== DAILY ===================== -->
+    <section id="daily" data-group="Daily content" style="--c:var(--green);--cs:var(--green-soft)">
+      <h2><span class="ico"><svg><use href="#i-cal"/></svg></span>Daily Quest <span class="where"><code>@dailyquest</code></span></h2>
+      <div class="glance">
+        <div class="chip"><b>1000</b><span>Monster kills</span></div>
+        <div class="chip"><b>1</b><span>MVP kill</span></div>
+        <div class="chip"><b>1</b><span>PvP kill or death</span></div>
+        <div class="chip"><b>1</b><span>Buy today's item</span></div>
+        <div class="chip"><b>10</b><span>Refine attempts</span></div>
+      </div>
+      <p>Each task = <strong>1 Daily Point</strong>. Spend 5 on the <strong>headgear of the day</strong>, or 1 on a potion box. Search the <a href="#items">Item finder</a> for "Daily" to see every possible headgear.</p>
+      <details class="more">
+        <summary>Read more</summary>
+        <ul>
+          <li>Start it with <code>@dailyquest</code> each day. One account per computer.</li>
+          <li>Potion boxes: Light White Potion Box or Blue Potion Box, 1 point each.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section id="activity" data-group="Daily content" style="--c:var(--rose);--cs:var(--rose-soft)">
+      <h2><span class="ico"><svg><use href="#i-dice"/></svg></span>Costume Gacha <span class="where">prontera 131,216</span></h2>
+      <p class="lead">Play and earn <strong>1 Activity Point per minute</strong>. Spend them on costume gacha.</p>
+      <div class="glance">
+        <div class="chip"><b>10 pts</b><span>Headgear spin, 10% win</span></div>
+        <div class="chip"><b>30 pts</b><span>Garment spin, 5% win</span></div>
+        <div class="chip"><b>10/day</b><span>Spins per day</span></div>
+      </div>
+      <details class="more">
+        <summary>Read more</summary>
+        <ul>
+          <li>No points while idle over a minute, standing still, or vending.</li>
+          <li><code>@activity</code> turns the point messages on or off.</li>
+          <li>Gacha costumes are account bound. Search the <a href="#items">Item finder</a> for "Gacha" to see every prize.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section id="hourly" data-group="Daily content" style="--c:var(--gold);--cs:var(--gold-soft)">
+      <h2><span class="ico"><svg><use href="#i-clock"/></svg></span>Hourly Points shop</h2>
+      <p class="lead">Stay online: <strong>1 point per hour</strong> (2 with VIP), up to 300. Open the shop from the <strong>Hourly / Gold PC button</strong> in your game window.</p>
+      <div class="glance">
+        <div class="chip"><b>2 pts</b><span>Potion boxes, Homun Level Ticket</span></div>
+        <div class="chip"><b>20 pts</b><span>Infinite Fly Wing (1 day)</span></div>
+        <div class="chip"><b>200 pts</b><span>VIP 7 Days</span></div>
+      </div>
+      <p>Full price list: search "Hourly" in the <a href="#items">Item finder</a>.</p>
+    </section>
+
+    <section id="devil" data-group="Daily content" style="--c:var(--warn);--cs:var(--warn-soft)">
+      <h2><span class="ico"><svg><use href="#i-skull"/></svg></span>Devil Square <span class="where">prontera 138,176</span></h2>
+      <p class="lead">Survive waves of monsters, then open treasure chests full of loot and cards.</p>
+      <div class="glance">
+        <div class="chip"><b>Every 2h</b><span>00:00, 02:00 ... 22:00</span></div>
+        <div class="chip"><b>Lv 70</b><span>+ 100,000z entry</span></div>
+        <div class="chip"><b>1-20</b><span>DS Points per run</span></div>
+        <div class="chip"><b>80 pts</b><span>VIP 1 Day in the DS shop</span></div>
+      </div>
+      <p>Die and you're out until the next opening. DS shop prices: search "Devil Square" in the <a href="#items">Item finder</a>.</p>
+    </section>
+
+    <!-- ===================== BOSSES ===================== -->
+    <section id="worldboss" data-group="Bosses and PvP" style="--c:var(--warn);--cs:var(--warn-soft)">
+      <h2><span class="ico"><svg><use href="#i-dragon"/></svg></span>World Boss <span class="where">prontera 136,171</span></h2>
+      <p class="lead">Every monster anyone kills = 1 soul. At <strong>15,000 souls</strong> a level 99 can summon the World Boss on a random field for 1 hour.</p>
+      <div class="glance">
+        <div class="chip"><b>Any hit</b><span>Deal damage = rewards by mail</span></div>
+        <div class="chip"><b>17-25</b><span>MVP Soul for everyone</span></div>
+        <div class="chip"><b>+10-15</b><span>MVP Soul for top damage</span></div>
+        <div class="chip"><b>1%</b><span>Fallen Angel Wing</span></div>
+      </div>
+      <details class="more">
+        <summary>Read more: all chance drops</summary>
+        <ul>
+          <li>5%: Bloody Branch, Enriched Elunium, Enriched Oridecon.</li>
+          <li>10% each: Kafra Card, LV10 Blessing / Agil Scrolls, Acid Bomb box, Poison Bottles, Yggdrasil Berry Box, Infinite Fly Wing, VIP 1 Day.</li>
+          <li>One character per computer on the boss map.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section id="mvp" data-group="Bosses and PvP" style="--c:var(--gold);--cs:var(--gold-soft)">
+      <h2><span class="ico"><svg><use href="#i-crown"/></svg></span>MVP Rank and bonus drops</h2>
+      <div class="glance">
+        <div class="chip"><b>100</b><span>MVP Soul for #1 each month</span></div>
+        <div class="chip"><b>0.3%</b><span>Bonus costume from ~80 monsters</span></div>
+        <div class="chip"><b>Live</b><span>MVP List shows who's alive</span></div>
+      </div>
+      <details class="more">
+        <summary>Read more: monthly rewards</summary>
+        <div class="tbl"><table>
+          <thead><tr><th>Rank</th><th class="num">MVP Soul</th><th class="num">Ygg Berry 10 Box</th><th class="num">Bloody Branch</th></tr></thead>
+          <tbody>
+            <tr><td>1st</td><td class="num">100</td><td class="num">5</td><td class="num">3</td></tr>
+            <tr><td>2nd</td><td class="num">50</td><td class="num">3</td><td class="num">2</td></tr>
+            <tr><td>3rd</td><td class="num">30</td><td class="num">2</td><td class="num">1</td></tr>
+          </tbody>
+        </table></div>
+        <ul>
+          <li>Which monster drops which costume: search "bonus drop" in the <a href="#items">Item finder</a>, or ask Extra Drop Info (164,170).</li>
+          <li>One character per computer on MVP maps.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section id="woe" data-group="Bosses and PvP" style="--c:var(--accent);--cs:var(--accent-soft)">
+      <h2><span class="ico"><svg><use href="#i-castle"/></svg></span>War of Emperium</h2>
+      <div class="glance">
+        <div class="chip"><b>Wed 20:00</b><span>to 21:00, server time</span></div>
+        <div class="chip"><b>Himinn</b><span>Warper → WoE Castle</span></div>
+        <div class="chip"><b>10M z</b><span>+ supplies for every real contributor</span></div>
+        <div class="chip"><b>@woerank</b><span>Player ranking</span></div>
+      </div>
+      <details class="more">
+        <summary>Read more: contributor reward</summary>
+        <ul>
+          <li>Claim at WOE Information (149,193) within 6 days, even if you were offline at the end.</li>
+          <li>Need 15 minutes of active time on the castle map and one of: a kill, 5,000 damage, 5,000 healing, or 10 support skills on guildmates.</li>
+          <li>Reward: 10,000,000z, 20 Acid Bomb 10 Box, 5 Poison Bottle 5 Box, 2 Cash Point[10], 10 Light White Potion Box, 10 Blue Potion Box. One claim per computer.</li>
+          <li>The guild holding the castle at the end gets the castle reward.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section id="pvp" data-group="Bosses and PvP" style="--c:var(--rose);--cs:var(--rose-soft)">
+      <h2><span class="ico"><svg><use href="#i-pvp"/></svg></span>PvP</h2>
+      <p>Climb the <strong>Ladder</strong> (166,198) or check <code>@pvpladder</code>. The PvP-StatsViewer (147,163) shows your stats. A kill or death on a PvP map also clears a <a href="#daily">Daily Quest</a> task.</p>
+    </section>
+
+    <!-- ===================== PROGRESSION ===================== -->
+    <section id="questshop" data-group="Progression" style="--c:var(--violet);--cs:var(--violet-soft)">
+      <h2><span class="ico"><svg><use href="#i-hat"/></svg></span>Quest Shop <span class="where">prontera 147,166</span></h2>
+      <p class="lead">Turn monster loot into <strong>390+ classic headgears</strong>. You can preview a hat before you make it.</p>
+      <p>Every recipe is in the <a href="#items">Item finder</a>. Search a hat name to see exactly what to farm.</p>
+    </section>
+
+    <section id="gear" data-group="Progression" style="--c:var(--gold);--cs:var(--gold-soft)">
+      <h2><span class="ico"><svg><use href="#i-anvil"/></svg></span>Equipment services</h2>
+      <div class="glance">
+        <div class="chip"><b>5 Souls</b><span>+ 500k: costume enchant</span></div>
+        <div class="chip"><b>1M z</b><span>Card removal, never destroys</span></div>
+        <div class="chip"><b>5M z</b><span>Reset stats or skills</span></div>
+        <div class="chip"><b>0%</b><span>Fail with Refine Tickets</span></div>
+      </div>
+      <details class="more">
+        <summary>Read more: every service</summary>
+        <div class="tbl"><table>
+          <thead><tr><th>Service</th><th>Where</th><th>Details</th></tr></thead>
+          <tbody>
+            <tr><td>Costume Enchanter</td><td>prontera 138,223</td><td>4 enchants per roll on a costume top/mid/low. Each slot 80% Tier 1, 19% Tier 2, 1% Tier 3. 5 MVP Soul + 500,000z. Reroll any time.</td></tr>
+            <tr><td>Fallen Angel Wing enchant</td><td>Fallen Luhir, prontera 140,125</td><td>1,000,000z. More slots at higher refine, special enchant at +9.</td></tr>
+            <tr><td>Refine Master</td><td>prt_in 56,54</td><td>Refine Ticket = no fail, up to the ticket level.</td></tr>
+            <tr><td>Card remover</td><td>prt_in 28,73</td><td>1,000,000z flat. Can fail, but nothing is destroyed.</td></tr>
+            <tr><td>Reset Girl</td><td>Kafra Employee</td><td>Stats, skills, or both: 5,000,000z each.</td></tr>
+            <tr><td>Plagiarism Master</td><td>prontera 128,213</td><td>Pick the copied skill: 500,000z.</td></tr>
+            <tr><td>Item signer</td><td>prt_in 24,61</td><td>Signs your name on slotless gear.</td></tr>
+          </tbody>
+        </table></div>
+      </details>
+    </section>
+
+    <section id="pets" data-group="Progression" style="--c:var(--green);--cs:var(--green-soft)">
+      <h2><span class="ico"><svg><use href="#i-paw"/></svg></span>Pets</h2>
+      <div class="glance">
+        <div class="chip"><b>Auto-feed</b><span>Works for every pet</span></div>
+        <div class="chip"><b>100k z</b><span>Rare taming items at Pet Groomers</span></div>
+      </div>
+    </section>
+
+    <!-- ===================== VIP ===================== -->
+    <section id="vip" data-group="VIP and Cash Shop" style="--c:var(--gold);--cs:var(--gold-soft)">
+      <h2><span class="ico"><svg><use href="#i-gem"/></svg></span>VIP <span class="where">prontera 147,174</span></h2>
+      <div class="glance">
+        <div class="chip"><b>+50%</b><span>Base and Job EXP</span></div>
+        <div class="chip"><b>+50%</b><span>Drop rate</span></div>
+        <div class="chip"><b>15</b><span>Character slots (9 normal)</span></div>
+        <div class="chip"><b>+6</b><span>VIP storages</span></div>
+        <div class="chip"><b>0</b><span>Gemstones needed</span></div>
+        <div class="chip"><b>2x</b><span>Hourly Points</span></div>
+      </div>
+      <details class="more">
+        <summary>Read more: price and free VIP</summary>
+        <ul>
+          <li>2 CP per day at the VIP Account NPC, or Cash Shop: 1 day 2 CP, 7 days 15 CP, 30 days 50 CP.</li>
+          <li>Free VIP: 3 days from Freebies, VIP 1 Day from Devil Square (80 pts) and World Boss, VIP 7 Days from the Hourly shop (200 pts).</li>
+          <li>VIP players claim a random item every 24 hours at the VIP Account NPC.</li>
+          <li>After VIP ends you can still take items out of VIP Storage, but not put new ones in.</li>
+        </ul>
+      </details>
+    </section>
+
+    <section id="cash" data-group="VIP and Cash Shop" style="--c:var(--teal);--cs:var(--teal-soft)">
+      <h2><span class="ico"><svg><use href="#i-coin"/></svg></span>Cash Shop</h2>
+      <p class="lead">VIP, Autohunt time, stat dishes, converters and lots of costumes and headgears. Every item and price is in the <a href="#items">Item finder</a> (filter "Cash Shop").</p>
+      <details class="more">
+        <summary>Read more: free Cash Points</summary>
+        <ul>
+          <li>WoE contributor reward: 2 Cash Point[10] every WoE.</li>
+          <li>Event rewards and GM promo codes (Kafra → Promotional Code).</li>
+          <li>Cash Point items (10 / 100 / 1000 / 10000) turn into CP when used.</li>
+        </ul>
+      </details>
+    </section>
+
+    <!-- ===================== EVENTS ===================== -->
+    <section id="events" data-group="Events" style="--c:var(--gold);--cs:var(--gold-soft)">
+      <h2><span class="ico"><svg><use href="#i-pumpkin"/></svg></span>Events</h2>
+      <h3>7 Nights of Jack <span class="tag">until Nov 15, 2026</span></h3>
+      <div class="glance">
+        <div class="chip"><b>1 night</b><span>per day, at Jack (159,183)</span></div>
+        <div class="chip"><b>7 nights</b><span>= random Halloween costume + garment</span></div>
+        <div class="chip"><b>100</b><span>MVP Soul in the final reward</span></div>
+      </div>
+      <details class="more">
+        <summary>Read more</summary>
+        <ul>
+          <li>Hunt monsters, find Pumpkin Ghosts in Payon, Geffen, Alberta and Morroc, and bring items. Each night gives Pumpkin Candy for Jack's Candy Shop.</li>
+          <li>Final reward also has 5 Cash Point[10], 10 Elite Siege Supply Box and 10 Token of Siegfried.</li>
+          <li>Missing a day resets nothing. One account per computer. <code>@halloween</code> shows progress.</li>
+        </ul>
+      </details>
+      <h3>Every week</h3>
+      <ul>
+        <li><strong>Double EXP</strong> Friday 00:00 to Monday 00:00.</li>
+        <li><strong>Devil Square</strong> every 2 hours.</li>
+        <li><strong>Cluckers</strong>: GM-run chicken hunt in Prontera.</li>
+      </ul>
+    </section>
+
+    <section id="rules" data-group="Events" style="--c:var(--warn);--cs:var(--warn-soft)">
+      <h2><span class="ico"><svg><use href="#i-shield"/></svg></span>Fair play</h2>
+      <div class="glance">
+        <div class="chip"><b>No bots</b><span>Gepard Shield. Use @ah</span></div>
+        <div class="chip"><b>2</b><span>Logins per computer</span></div>
+        <div class="chip"><b>1</b><span>Character per PC on MVP / World Boss maps</span></div>
+      </div>
+      <details class="more">
+        <summary>Read more</summary>
+        <ul>
+          <li>Many rewards are per computer: Freebies, Daily Quest, events, promo codes, free autohunt time, MVP share and WoE rewards.</li>
+          <li>Gacha costumes can't be traded.</li>
+          <li>Don't feel pressured to donate. Legacia is free to play.</li>
+        </ul>
+      </details>
+    </section>
+
+    <p class="foot">Legacia RO Wiki · built from the server's own scripts and settings · November 2026</p>
+  </main>
+</div>
+
+<script id="itemdata" type="application/json">__ITEMS__</script>
+<script>
+(function () {
+  /* ---------- chapter index ---------- */
+  var sections = Array.prototype.slice.call(document.querySelectorAll("main section"));
+  var list = document.getElementById("toclist");
+  var links = {}, lastGroup = "";
+  sections.forEach(function (s) {
+    var g = s.getAttribute("data-group");
+    if (g !== lastGroup) { var gl = document.createElement("li"); gl.className = "grp"; gl.textContent = g; list.appendChild(gl); lastGroup = g; }
+    var h = s.querySelector("h2"), title = "";
+    h.childNodes.forEach(function (n) { if (n.nodeType === 3) title += n.textContent; });
+    var li = document.createElement("li"), a = document.createElement("a"), dot = document.createElement("span");
+    dot.className = "dot"; dot.style.setProperty("--c", getComputedStyle(s).getPropertyValue("--c"));
+    a.href = "#" + s.id; a.appendChild(dot); a.appendChild(document.createTextNode(title.trim()));
+    li.appendChild(a); list.appendChild(li); links[s.id] = a;
+  });
+  var toc = document.getElementById("toc"), narrow = window.matchMedia("(max-width: 860px)");
+  if (narrow.matches) toc.open = false;
+  list.addEventListener("click", function (e) { if (e.target.closest("a") && narrow.matches) toc.open = false; });
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) Object.keys(links).forEach(function (k) { links[k].classList.toggle("on", k === en.target.id); }); });
+    }, { rootMargin: "-20% 0px -70% 0px" });
+    sections.forEach(function (s) { io.observe(s); });
+  }
+
+  /* ---------- item finder ---------- */
+  var rows = JSON.parse(document.getElementById("itemdata").textContent);
+  var order = ["Quest Shop", "Tool Dealer", "Cash Shop", "Hourly Shop", "Devil Square Shop", "Pet Groomer", "Gacha Machine", "Monster drop", "Daily Point Shop"];
+  var byId = {}, items = [];
+  rows.forEach(function (r) {
+    var it = byId[r.id];
+    if (!it) { it = byId[r.id] = { id: r.id, n: r.n, t: r.t, src: [] }; items.push(it); }
+    it.src.push(r);
+  });
+  items.forEach(function (it) {
+    it.src.sort(function (a, b) { return order.indexOf(a.s) - order.indexOf(b.s); });
+    it.key = (it.n + " " + it.id + " " + it.t + " " + it.src.map(function (s) { return s.s + " " + s.w + " " + s.c; }).join(" ")).toLowerCase();
+    it.rank = order.indexOf(it.src[0].s);
+  });
+  items.sort(function (a, b) { return a.rank - b.rank || a.n.localeCompare(b.n); });
+
+  var counts = {}; rows.forEach(function (r) { counts[r.s] = (counts[r.s] || 0) + 1; });
+  var filt = "All", q = "", shown = 24;
+  var fbox = document.getElementById("filters");
+  ["All"].concat(order).forEach(function (s) {
+    var b = document.createElement("button"); b.type = "button";
+    b.textContent = s === "All" ? "All (" + items.length + ")" : s + " (" + counts[s] + ")";
+    b.setAttribute("aria-pressed", s === filt ? "true" : "false");
+    b.addEventListener("click", function () { filt = s; shown = 24; Array.prototype.forEach.call(fbox.children, function (x) { x.setAttribute("aria-pressed", x === b ? "true" : "false"); }); render(); });
+    fbox.appendChild(b);
+  });
+  var res = document.getElementById("results"), cnt = document.getElementById("icount"), more = document.getElementById("showmore");
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function hl(s) {
+    s = esc(s); if (!q) return s;
+    var i = s.toLowerCase().indexOf(esc(q).toLowerCase());
+    return i < 0 ? s : s.slice(0, i) + "<mark>" + s.slice(i, i + q.length) + "</mark>" + s.slice(i + q.length);
+  }
+  function srcHtml(s) {
+    return '<div class="src"><b>' + esc(s.s) + '</b><span class="w">' + hl(s.w) + '</span><span class="c">' + hl(s.c) + '</span>' + (s.d ? '<span class="d">' + esc(s.d) + '</span>' : "") + "</div>";
+  }
+  function render() {
+    var terms = q.toLowerCase().split(/\s+/).filter(Boolean);
+    var hits = items.filter(function (it) {
+      if (filt !== "All" && !it.src.some(function (s) { return s.s === filt; })) return false;
+      return terms.every(function (t) { return it.key.indexOf(t) !== -1; });
+    });
+    cnt.textContent = hits.length ? hits.length + (hits.length === 1 ? " item" : " items") + (q ? ' match "' + q + '"' : "") : 'Nothing found for "' + q + '". Try a shorter word, or the item ID.';
+    var html = "";
+    hits.slice(0, shown).forEach(function (it) {
+      var src = filt === "All" ? it.src : it.src.filter(function (s) { return s.s === filt; }).concat(it.src.filter(function (s) { return s.s !== filt; }));
+      html += '<article class="item"><div class="top"><span class="name">' + hl(it.n) + '</span><span class="id">#' + it.id + '</span></div><span class="type">' + esc(it.t) + "</span>";
+      html += srcHtml(src[0]);
+      if (src.length > 1) html += '<div class="extra" hidden>' + src.slice(1).map(srcHtml).join("") + '</div><button class="moresrc" type="button">+ ' + (src.length - 1) + " more place" + (src.length > 2 ? "s" : "") + " to get it</button>";
+      html += "</article>";
+    });
+    res.innerHTML = html;
+    more.hidden = hits.length <= shown;
+  }
+  res.addEventListener("click", function (e) {
+    var b = e.target.closest(".moresrc"); if (!b) return;
+    b.previousElementSibling.hidden = false; b.remove();
+  });
+  more.addEventListener("click", function () { shown += 48; render(); });
+  var iq = document.getElementById("iq"), timer;
+  iq.addEventListener("input", function () { clearTimeout(timer); timer = setTimeout(function () { q = iq.value.trim(); shown = 24; render(); }, 120); });
+  render();
+})();
+</script>

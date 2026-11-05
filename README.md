@@ -27,3 +27,10 @@ The site is then at `https://mjonrest.github.io/legacia-wiki/`.
 
 Content comes from the server repository (`mjonrest/legacia-RO`): `npc/miracle/*`, `npc/custom/*`, `conf/battle/*.conf` and the db files.
 Update the page when those systems change (rates, autohunt, WoE schedule, VIP, events).
+
+## Item finder data
+
+The item list inside `index.html` is generated from the server repo by `tools/extract_items.py`
+(reads `npc/miracle/*` shops, Quest Shop recipes, gacha lists, `db/item_cash.yml` and the item db).
+Run it with the legacia-RO repo at `/home/user/legacia-RO`, then put the JSON into `tools/page_template.html`
+where `__ITEMS__` is.
