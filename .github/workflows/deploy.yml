@@ -1,0 +1,64 @@
+# Uploads the wiki to the web host over FTP whenever main changes, so the live site follows this repo
+# without anyone copying files by hand. Also runs by hand from the Actions tab ("Run workflow").
+#
+# Needs these repository secrets (Settings > Secrets and variables > Actions > Secrets):
+#   FTP_SERVER    host name WinSCP connects to, e.g. ftp.example.com
+#   FTP_USERNAME  FTP user
+#   FTP_PASSWORD  FTP password
+# and this repository variable (same page, Variables tab):
+#   FTP_DIR       folder on the host to upload into, e.g. domains/legacia.example/public_html/wiki
+# Optional variable:
+#   FTP_PROTOCOL  ftp (default) or ftps
+name: Deploy to web host
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-wiki
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Check the FTP details are set
+        id: check
+        env:
+          SERVER: ${{ secrets.FTP_SERVER }}
+          DIR: ${{ vars.FTP_DIR }}
+        run: |
+          if [ -z "$SERVER" ] || [ -z "$DIR" ]; then
+            echo "::warning::Add the FTP_SERVER, FTP_USERNAME and FTP_PASSWORD secrets and the FTP_DIR variable to upload the wiki. See README.md."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/checkout@v4
+        if: steps.check.outputs.skip != 'true'
+      - name: Install lftp
+        if: steps.check.outputs.skip != 'true'
+        run: sudo apt-get update -q && sudo apt-get install -y -q lftp
+      - name: Upload
+        if: steps.check.outputs.skip != 'true'
+        env:
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          FTP_DIR: ${{ vars.FTP_DIR }}
+          FTP_PROTOCOL: ${{ vars.FTP_PROTOCOL || 'ftp' }}
+        run: |
+          # Only the site files go up: README, .github and .git stay out.
+          lftp -u "$FTP_USERNAME,$FTP_PASSWORD" "$FTP_PROTOCOL://$FTP_SERVER" -e "
+            set ftp:ssl-allow yes;
+            set ssl:verify-certificate no;
+            set net:max-retries 3;
+            mkdir -p -f $FTP_DIR;
+            cd $FTP_DIR;
+            put index.html;
+            bye"
+          echo "Uploaded index.html to $FTP_DIR"
