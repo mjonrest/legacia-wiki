@@ -1,0 +1,593 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Player guide for Legacia RO: rates, Autohunt, Weapon Mastery, daily content, bosses, WoE, VIP and every Prontera NPC.">
+<title>Legacia RO Wiki</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Nunito+Sans:ital,opsz,wght@0,6..12,400;0,6..12,600;0,6..12,800;1,6..12,400&family=JetBrains+Mono:wght@500&display=swap">
+<style>
+/* Layout: a guild handbook. Sticky chapter index on the left, one long readable column on the right, chapter search filters both. */
+:root {
+  --bg: #eef1f6;
+  --surface: #ffffff;
+  --ink: #18202e;
+  --muted: #586379;
+  --line: #d6dce7;
+  --accent: #2a4bb0;
+  --accent-soft: #e3e9fa;
+  --gold: #a9741a;
+  --gold-soft: #f7ecd6;
+  --warn: #a2361f;
+  --warn-soft: #fbe6e1;
+  --code-bg: #e8ecf4;
+  --f-display: "Cinzel", "Trajan Pro", Georgia, serif;
+  --f-body: "Nunito Sans", "Segoe UI", system-ui, sans-serif;
+  --f-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+  --step--1: 0.84rem;
+  --step-0: 1rem;
+  --step-1: 1.2rem;
+  --step-2: 1.55rem;
+  --step-3: 2.3rem;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e1320; --surface: #161d2d; --ink: #e5e9f2; --muted: #9aa4b8; --line: #283247;
+    --accent: #8ea8ff; --accent-soft: #1f2a48; --gold: #e2b65e; --gold-soft: #33291a;
+    --warn: #ff9b85; --warn-soft: #3a1f1a; --code-bg: #1f2738; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0e1320; --surface: #161d2d; --ink: #e5e9f2; --muted: #9aa4b8; --line: #283247;
+  --accent: #8ea8ff; --accent-soft: #1f2a48; --gold: #e2b65e; --gold-soft: #33291a;
+  --warn: #ff9b85; --warn-soft: #3a1f1a; --code-bg: #1f2738; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 16px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+body {
+  margin: 0;
+  background: var(--bg); color: var(--ink);
+  font-family: var(--f-body); font-size: var(--step-0); line-height: 1.6;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0;
+}
+a { color: var(--accent); }
+a:focus-visible, input:focus-visible, button:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+.shell { max-width: 1180px; margin: 0 auto; display: grid; grid-template-columns: 250px minmax(0, 1fr); gap: 40px; padding-block: 28px 64px; }
+@media (max-width: 860px) { .shell { grid-template-columns: minmax(0, 1fr); gap: 20px; padding-block: 16px 48px; } }
+
+/* index */
+.index { position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px); align-self: start; max-height: calc(100vh - 32px); overflow-y: auto; display: flex; flex-direction: column; gap: 14px; }
+@media (max-width: 860px) { .index { position: static; max-height: none; overflow: visible; } }
+.brand { font-family: var(--f-display); font-weight: 700; font-size: var(--step-1); letter-spacing: 0.06em; color: var(--ink); text-decoration: none; }
+.brand span { color: var(--gold); }
+.search { width: 100%; font: inherit; font-size: var(--step--1); padding: 9px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); color: var(--ink); }
+.toc summary { cursor: pointer; font-size: var(--step--1); font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); list-style: none; }
+.toc summary::-webkit-details-marker { display: none; }
+@media (min-width: 861px) { .toc summary { pointer-events: none; } }
+@media (max-width: 860px) { .toc summary { border: 1px solid var(--line); border-radius: 8px; padding: 9px 12px; background: var(--surface); } .toc summary::after { content: " +"; } .toc[open] summary::after { content: " \2212"; } }
+.toc ol { list-style: none; margin: 8px 0 0; padding: 0; display: flex; flex-direction: column; gap: 1px; }
+.toc a { display: block; padding: 5px 10px; border-radius: 6px; text-decoration: none; color: var(--ink); font-size: 0.92rem; }
+.toc a:hover { background: var(--accent-soft); }
+.toc a.on { background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+.toc .grp { margin-top: 10px; padding: 0 10px; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gold); }
+.noresult { font-size: var(--step--1); color: var(--muted); }
+
+/* content */
+main { min-width: 0; display: flex; flex-direction: column; gap: 22px; }
+.hero { padding: 30px 30px 26px; background: var(--surface); border: 1px solid var(--line); border-radius: 14px; display: flex; flex-direction: column; gap: 14px; }
+.hero h1 { margin: 0; font-family: var(--f-display); font-weight: 700; font-size: var(--step-3); line-height: 1.1; letter-spacing: 0.04em; text-wrap: balance; }
+.hero p { margin: 0; max-width: 62ch; color: var(--muted); }
+.ratebar { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; }
+.rate { border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; display: flex; flex-direction: column; gap: 2px; }
+.rate b { font-family: var(--f-display); font-size: var(--step-2); line-height: 1.1; font-variant-numeric: tabular-nums; }
+.rate small { color: var(--muted); font-size: 0.78rem; letter-spacing: 0.04em; text-transform: uppercase; font-weight: 700; }
+
+section { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 24px 28px; display: flex; flex-direction: column; gap: 12px; }
+@media (max-width: 560px) { section, .hero { padding: 18px 16px; } }
+section > * { margin: 0; max-width: 72ch; }
+section > .tbl, section > .cards { max-width: none; }
+h2 { font-family: var(--f-display); font-weight: 700; font-size: var(--step-2); letter-spacing: 0.03em; line-height: 1.2; text-wrap: balance; display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+h2 .where { font-family: var(--f-body); font-size: var(--step--1); font-weight: 600; color: var(--muted); letter-spacing: 0; }
+h3 { font-size: var(--step-1); font-weight: 800; margin-top: 6px !important; }
+p, li { text-wrap: pretty; }
+ul, ol.steps { padding-left: 1.2em; display: flex; flex-direction: column; gap: 4px; }
+code, kbd { font-family: var(--f-mono); font-size: 0.86em; background: var(--code-bg); padding: 1px 6px; border-radius: 5px; white-space: nowrap; }
+.tbl { overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
+table { border-collapse: collapse; width: 100%; font-size: 0.93rem; }
+th, td { text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+tr:last-child td { border-bottom: 0; }
+th { font-size: 0.75rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); background: var(--bg); font-weight: 800; }
+td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.note { border-radius: 10px; padding: 10px 14px; background: var(--accent-soft); font-size: 0.94rem; }
+.note.gold { background: var(--gold-soft); }
+.note.warn { background: var(--warn-soft); }
+.note strong:first-child { margin-right: 4px; }
+.cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+.card { border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.card h4 { margin: 0; font-size: 1rem; font-weight: 800; }
+.card .stat { font-size: 0.78rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gold); }
+.card p { margin: 0; font-size: 0.92rem; color: var(--muted); }
+.tag { display: inline-block; font-size: 0.72rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; background: var(--gold-soft); color: var(--gold); vertical-align: middle; }
+.foot { color: var(--muted); font-size: var(--step--1); text-align: center; }
+mark { background: var(--gold-soft); color: inherit; padding: 0 2px; border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<div class="shell">
+  <aside class="index">
+    <a class="brand" href="#top">Legacia <span>RO</span> Wiki</a>
+    <input id="q" class="search" type="search" placeholder="Search the wiki (e.g. VIP, MVP, @ah)" aria-label="Search the wiki">
+    <details class="toc" id="toc" open>
+      <summary>Chapters</summary>
+      <ol id="toclist"></ol>
+      <p class="noresult" id="noresult" hidden>No chapter matches that search.</p>
+    </details>
+  </aside>
+
+  <main id="top">
+    <header class="hero">
+      <h1>Legacia RO Player Wiki</h1>
+      <p>Everything you need to play on Legacia: rates, the custom systems (Autohunt, Weapon Mastery, MVP party share), daily content, events, WoE, VIP and every helper NPC in Prontera.</p>
+      <div class="ratebar" aria-label="Server rates">
+        <div class="rate"><small>Episode</small><b>Pre-RE</b></div>
+        <div class="rate"><small>Base / Job EXP</small><b>5x</b></div>
+        <div class="rate"><small>Weekend EXP</small><b>10x</b></div>
+        <div class="rate"><small>Normal cards</small><b>0.5%</b></div>
+        <div class="rate"><small>Max stat</small><b>99</b></div>
+        <div class="rate"><small>Free autohunt</small><b>3 h/day</b></div>
+      </div>
+    </header>
+
+    <!-- ===================== BASICS ===================== -->
+    <section id="rates" data-group="The basics">
+      <h2>Server rates</h2>
+      <p>Legacia is a <strong>pre-renewal</strong> server: classic mechanics, classic skills, Trans and Baby classes. Rates are below. A drop rate of 10x means a 1% item becomes 10%.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>What</th><th class="num">Normal monsters</th><th class="num">Boss</th><th class="num">MVP</th></tr></thead>
+        <tbody>
+          <tr><td>Base and Job EXP</td><td class="num" colspan="3">5x (10x on weekends)</td></tr>
+          <tr><td>Common / healing / usable items</td><td class="num">10x</td><td class="num">10x</td><td class="num">10x</td></tr>
+          <tr><td>Equipment</td><td class="num">25x</td><td class="num">5x</td><td class="num">5x</td></tr>
+          <tr><td>Cards (0.01% base cards)</td><td class="num">50x (0.5%)</td><td class="num">10x (0.1%)</td><td class="num">10x (0.1%)</td></tr>
+          <tr><td>MVP reward items (the box on screen)</td><td class="num">-</td><td class="num">-</td><td class="num">1x</td></tr>
+          <tr><td>Homunculus growth</td><td class="num" colspan="3">3x</td></tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li><strong>Weekend Double EXP</strong> runs from <strong>Friday 00:00 to Monday 00:00</strong> (server time). You'll see an announce when it starts and ends.</li>
+        <li>Death costs 1% of your Base and Job EXP.</li>
+        <li>Party EXP share works within a <strong>20 level</strong> gap.</li>
+        <li>Max stat is 99 for every class. Type <code>@rates</code> in game to see the live rates.</li>
+        <li>Equipment that drops from monsters can roll <strong>random options</strong> (bonus stats). It drops unidentified, so use a Magnifier to see what you got.</li>
+      </ul>
+    </section>
+
+    <section id="start" data-group="The basics">
+      <h2>Getting started <span class="where">Prontera</span></h2>
+      <ol class="steps">
+        <li><strong>Claim your Freebies.</strong> Talk to the <strong>Kafra Employee</strong> (prontera 145,197) and pick <em>Claim Freebies</em>. You get 3 days of VIP, two random Poring costumes, 5 MVP Soul, 6 Light White Potion boxes, 6 Blue Potion boxes, 3 Battle Manuals and 3 JOB Battle Manuals. Freebies can be claimed <strong>once per computer</strong>.</li>
+        <li><strong>Change job at the Job Master</strong> (prontera 164,195). Rebirth and Baby classes are available, and Platinum skills are given automatically when you change job.</li>
+        <li><strong>Start your Daily Quest</strong> with <code>@dailyquest</code>.</li>
+        <li><strong>Turn on Autohunt</strong> with <code>@ah</code> when you want to farm. You have 3 free hours every day.</li>
+        <li><strong>Check your Weapon Mastery</strong> with <code>@wi</code>. It levels up as you hunt.</li>
+      </ol>
+      <div class="note gold"><strong>Tip:</strong> Legacia Support (prontera 153,193, and one in most towns) heals and buffs you for free. The Warper stands in every town.</div>
+    </section>
+
+    <section id="npcs" data-group="The basics">
+      <h2>Prontera NPC map</h2>
+      <p>Coordinates are <code>x,y</code> on the Prontera map. Type <code>/navi prontera x/y</code> to get an arrow to them.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>NPC</th><th class="num">Where</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td>Kafra Employee</td><td class="num">145,197</td><td>Save, Storage, VIP Storage 1-6, Freebies, Reset Girl, Platinum skills, mount/cart rental, promo codes</td></tr>
+          <tr><td>Legacia Support</td><td class="num">153,193</td><td>Free heal and buffs</td></tr>
+          <tr><td>WOE Information</td><td class="num">149,193</td><td>WoE schedule, castle owners, WoE rankings and stats, WoE reward claim</td></tr>
+          <tr><td>Job Master</td><td class="num">164,195</td><td>Job changes, Rebirth, Baby classes</td></tr>
+          <tr><td>Ladder</td><td class="num">166,198</td><td>PvP ranking</td></tr>
+          <tr><td>MVP List</td><td class="num">157,198</td><td>Which MVPs are alive and when they respawn</td></tr>
+          <tr><td>Jack the Pumpkin Keeper</td><td class="num">159,183</td><td>Halloween event (until Nov 15)</td></tr>
+          <tr><td>MvP Rank</td><td class="num">140,182</td><td>Monthly MVP kill ranking and rewards</td></tr>
+          <tr><td>Devil Square Guardian</td><td class="num">138,176</td><td>Devil Square entry and shop</td></tr>
+          <tr><td>VIP Account</td><td class="num">147,174</td><td>Buy VIP with Cash Points, daily VIP reward</td></tr>
+          <tr><td>World Boss</td><td class="num">136,171</td><td>Soul count and World Boss summon</td></tr>
+          <tr><td>Weapon Mastery Guide</td><td class="num">147,170</td><td>Explains Weapon Mastery</td></tr>
+          <tr><td>Extra Drop Info</td><td class="num">164,170</td><td>Which monsters drop bonus costumes</td></tr>
+          <tr><td>Quest Shop</td><td class="num">147,166</td><td>Headgear crafting quests</td></tr>
+          <tr><td>BattlePass Manager</td><td class="num">164,166</td><td>Battle Pass</td></tr>
+          <tr><td>PvP-StatsViewer</td><td class="num">147,163</td><td>PvP stats</td></tr>
+          <tr><td>Tool Dealer</td><td class="num">164,175</td><td>Basic consumables</td></tr>
+          <tr><td>Stylist</td><td class="num">173,179</td><td>Hair style, hair and cloth color</td></tr>
+          <tr><td>Gacha Machine</td><td class="num">131,216</td><td>Costume gacha with Activity Points</td></tr>
+          <tr><td>Costume Enchanter</td><td class="num">138,223</td><td>Enchant costume headgears</td></tr>
+          <tr><td>Plagiarism Master</td><td class="num">128,213</td><td>Choose the copied skill for Rogue / Stalker</td></tr>
+          <tr><td>Fallen Luhir</td><td class="num">140,125</td><td>Fallen Angel Wing enchants</td></tr>
+          <tr><td>Refine Master</td><td class="num">prt_in 56,54</td><td>Safe refining with Refine Tickets</td></tr>
+          <tr><td>Wise Old Woman</td><td class="num">prt_in 28,73</td><td>Card remover</td></tr>
+          <tr><td>Perchik</td><td class="num">prt_in 24,61</td><td>Signs your name on equipment</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="commands" data-group="The basics">
+      <h2>Player commands</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>Command</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td><code>@ah</code></td><td>Autohunt menu: start, stop, go offline, set skills, potions, teleport and loot</td></tr>
+          <tr><td><code>@wi</code> / <code>@weaponinfo</code></td><td>Your Weapon Mastery level, EXP and bonuses. Add a name to check one mastery, e.g. <code>@wi Ranged</code></td></tr>
+          <tr><td><code>@dailyquest</code></td><td>Daily Quest progress and the Daily Point Shop</td></tr>
+          <tr><td><code>@statsview</code></td><td>Full breakdown of your stats and item bonuses (attack, magic, defense, drops and more)</td></tr>
+          <tr><td><code>@woerank</code></td><td>WoE player ranking</td></tr>
+          <tr><td><code>@pvpladder</code></td><td>PvP ladder</td></tr>
+          <tr><td><code>@halloween</code></td><td>Halloween event progress (event period only)</td></tr>
+          <tr><td><code>@autopot</code></td><td>Auto potion for normal play</td></tr>
+          <tr><td><code>@activity</code></td><td>Turns the Activity Point messages on or off</td></tr>
+          <tr><td><code>@autoloot</code>, <code>@alootid</code>, <code>@autoloottype</code></td><td>Auto pick up items by rate, by item ID, or by type</td></tr>
+          <tr><td><code>@whodrops</code>, <code>@mobinfo</code>, <code>@iteminfo</code></td><td>Look up drops, monsters and items</td></tr>
+          <tr><td><code>@rates</code>, <code>@exp</code>, <code>@showexp</code>, <code>@showzeny</code></td><td>Rates and EXP/zeny gain messages</td></tr>
+          <tr><td><code>@autotrade</code></td><td>Leave your vending shop open after you log out</td></tr>
+          <tr><td><code>@go</code>, <code>@refresh</code>, <code>@time</code>, <code>@jailtime</code></td><td>Town warp, fix desync, server time</td></tr>
+          <tr><td><code>@invite</code>, <code>@accept</code>, <code>@reject</code>, <code>@leave</code>, <code>@duel</code></td><td>Duels</td></tr>
+          <tr><td><code>@hominfo</code>, <code>@homstats</code></td><td>Homunculus info</td></tr>
+          <tr><td><code>@request</code></td><td>Send a message to online GMs</td></tr>
+          <tr><td><code>@commands</code></td><td>Lists every command you can use</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- ===================== SYSTEMS ===================== -->
+    <section id="autohunt" data-group="Legacia systems">
+      <h2>Autohunt <span class="where"><code>@ah</code></span></h2>
+      <p>Autohunt is Legacia's built-in, server-side auto attack. Your character explores the map, fights monsters with the skills you choose, drinks potions, teleports when the area is empty and loots for you. Third-party bots are not allowed. Use this instead.</p>
+      <h3>Time</h3>
+      <ul>
+        <li>Everyone gets <strong>3 hours free every day</strong>, reset at midnight server time.</li>
+        <li>Free time is shared by your account <em>and</em> your computer, so extra accounts on the same PC don't get extra free time.</li>
+        <li>Buy more with <strong>Autohunt Time</strong> tickets in the Cash Shop (Consumables tab): 1 hour for 17 CP, 5 hours for 85 CP, 24 hours for 408 CP. Bought time never expires.</li>
+      </ul>
+      <h3>Rewards while autohunting</h3>
+      <p>Autohunting gives <strong>50% EXP, 50% drop rate and 50% Weapon Mastery EXP</strong> compared with playing yourself. <code>@ah</code> and <code>@wi</code> show the current values.</p>
+      <h3>Settings in the <code>@ah</code> menu</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>Option</th><th>What it does</th></tr></thead>
+        <tbody>
+          <tr><td>Start / Stop</td><td>Starts or stops autohunt on your current map.</td></tr>
+          <tr><td>Start offline</td><td>Logs you out while your character keeps hunting. Log back in to stop. Offline hunting frees a client slot.</td></tr>
+          <tr><td>Attack skills</td><td>Up to 3 skills, tried in order. If none can be used, you attack normally.</td></tr>
+          <tr><td>Buff skills</td><td>Up to 3 self buffs, recast whenever they run out.</td></tr>
+          <tr><td>Auto potion</td><td>One HP and one SP potion, used below the % you set.</td></tr>
+          <tr><td>Auto teleport</td><td>Teleports after 1 to 60 seconds without a monster. Choose Teleport skill, Infinite Fly Wing, Fly Wing, or Auto (tries them in that order).</td></tr>
+          <tr><td>Crowd teleport</td><td>Teleports away when too many monsters (2 to 30) are within 3 cells of you.</td></tr>
+          <tr><td>Ignore monsters</td><td>Pick up to 20 monsters to skip, from a list of the monsters on your map.</td></tr>
+          <tr><td>MVP</td><td>Avoid MVPs (default) or attack them.</td></tr>
+          <tr><td>Autoloot</td><td>Everything, items at or below 50% / 10% / 1% / 0.1% drop rate, a custom %, or off.</td></tr>
+        </tbody>
+      </table></div>
+      <div class="note"><strong>Limits:</strong> up to 2 characters per computer can autohunt at once, and only 1 of them offline. Autohunt avoids warp portals and doesn't steal monsters other players are fighting. Autohunting characters show an <strong>[AutoHunt]</strong> tag and a blue aura.</div>
+    </section>
+
+    <section id="mastery" data-group="Legacia systems">
+      <h2>Weapon Mastery <span class="where"><code>@wi</code></span></h2>
+      <p>Every weapon type belongs to one of four masteries. The weapon in your <strong>right hand</strong> decides which mastery is active and which one gains EXP. Left-hand weapons don't count. Masteries go up to <strong>level 128</strong>, and each level makes its bonuses stronger.</p>
+      <div class="cards">
+        <div class="card"><span class="stat">STR</span><h4>Onslaught</h4><p>1H/2H Sword, 1H/2H Spear, 1H/2H Axe, Mace, Knuckle. Damage vs all monsters, Base ATK, critical damage, ASPD, and splash attack at Lv 128.</p></div>
+        <div class="card"><span class="stat">AGI</span><h4>Swiftness</h4><p>Dagger, Katar, Fuuma Shuriken, Book. ASPD, move speed, Flee, Perfect Dodge, Double Attack, crit, and HP drain at Lv 128.</p></div>
+        <div class="card"><span class="stat">DEX</span><h4>Ranged</h4><p>Bow, Instrument, Whip, Guns. Damage vs all monsters, long range damage, flat ASPD, Hit, and +2 attack range at Lv 128.</p></div>
+        <div class="card"><span class="stat">INT</span><h4>Mystical</h4><p>Rod, 2H Staff, plus some magic daggers and swords (e.g. Elemental Sword). Magic damage, MATK, cast time, SP, healing power, and no cast cancel at Lv 128.</p></div>
+      </div>
+      <ul>
+        <li><strong>How to level:</strong> hunt with the weapon equipped. Mastery EXP comes from the Job EXP of your kills, and higher level weapons give more.</li>
+        <li><strong>Party:</strong> when a party member kills a monster, the rest of the party on the map gets 50% of that mastery EXP.</li>
+        <li>Mastery bonuses scale with your <em>base</em> stat (STR/AGI/DEX/INT without gear).</li>
+        <li>The <strong>Weapon Mastery Guide</strong> (prontera 147,170) lists every bonus in game.</li>
+      </ul>
+    </section>
+
+    <section id="party" data-group="Legacia systems">
+      <h2>Party play and MVP drop share</h2>
+      <p>When anyone in your party kills an MVP, <strong>every other member on the same map rolls the MVP's whole drop table for themselves</strong>, with the same chances as the killer. A 0.1% card is a 0.1% chance for each of you. The killer keeps their normal drops.</p>
+      <ul>
+        <li>Shared drops arrive unidentified in your inventory. Rare ones (1% or lower) are announced to the whole server.</li>
+        <li>This also works for quest and instance MVPs such as Ktullanux and Thanatos Phantom.</li>
+        <li>Alts on the same computer don't get a roll. Bring real friends.</li>
+        <li>Weapon Mastery EXP is shared at 50% too (see <a href="#mastery">Weapon Mastery</a>).</li>
+      </ul>
+    </section>
+
+    <!-- ===================== DAILY ===================== -->
+    <section id="daily" data-group="Daily content">
+      <h2>Daily Quest <span class="where"><code>@dailyquest</code></span></h2>
+      <p>Start the Daily Quest once a day with <code>@dailyquest</code>. Each finished task gives <strong>1 Daily Point</strong>, up to 5 per day. One account per computer can do it each day.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Task</th><th>How to finish</th></tr></thead>
+        <tbody>
+          <tr><td>Kill 1000 monsters</td><td>Any monster counts</td></tr>
+          <tr><td>Kill 1 MVP</td><td>Any MVP</td></tr>
+          <tr><td>PvP activity</td><td>Kill a player, or die, on a PvP map</td></tr>
+          <tr><td>Buy an item</td><td>Buy today's item shown in the menu</td></tr>
+          <tr><td>Refine 10 times</td><td>Any refine attempts</td></tr>
+        </tbody>
+      </table></div>
+      <h3>Daily Point Shop</h3>
+      <ul>
+        <li><strong>Headgear of the day</strong> for 5 points. It changes daily and comes from a pool that includes every Quest Shop headgear.</li>
+        <li><strong>Light White Potion</strong> or <strong>Light Blue Potion</strong> boxes for 1 point each.</li>
+      </ul>
+    </section>
+
+    <section id="activity" data-group="Daily content">
+      <h2>Activity Points and Costume Gacha <span class="where">Gacha Machine, prontera 131,216</span></h2>
+      <p>You earn <strong>1 Activity Point every minute</strong> while you're actually playing. You get nothing while idle for over a minute, standing in the same spot, or vending. Turn the point messages on or off with <code>@activity</code>.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Gacha</th><th class="num">Cost</th><th class="num">Win chance</th><th>Prize</th></tr></thead>
+        <tbody>
+          <tr><td>Costume Headgear</td><td class="num">10 pts</td><td class="num">10%</td><td>Random upper, middle or lower costume</td></tr>
+          <tr><td>Costume Garment</td><td class="num">30 pts</td><td class="num">5%</td><td>Random costume garment</td></tr>
+        </tbody>
+      </table></div>
+      <p>You can play 10 times per day. Costumes from the Gacha Machine are <strong>account bound</strong>, so you can't trade them.</p>
+    </section>
+
+    <section id="hourly" data-group="Daily content">
+      <h2>Hourly Points shop</h2>
+      <p>Staying online gives you <strong>1 Hourly Point per hour</strong> (2 with VIP), up to 300 saved. Open the shop from the <strong>Hourly / Gold PC button</strong> in your game window.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Item</th><th class="num">Points</th></tr></thead>
+        <tbody>
+          <tr><td>Homunculus Level Ticket</td><td class="num">2</td></tr>
+          <tr><td>Light White Potion Box / Blue Potion Box</td><td class="num">2</td></tr>
+          <tr><td>Acid Bomb 10 Box</td><td class="num">4</td></tr>
+          <tr><td>Poison Bottle 5 Box</td><td class="num">6</td></tr>
+          <tr><td>Battle Manual</td><td class="num">10</td></tr>
+          <tr><td>Gym Pass</td><td class="num">10</td></tr>
+          <tr><td>Infinite Fly Wing Box (1 Day)</td><td class="num">20</td></tr>
+          <tr><td>Bubble Gum</td><td class="num">30</td></tr>
+          <tr><td>Homunculus Reshuffle Ticket</td><td class="num">150</td></tr>
+          <tr><td>VIP 7 Days</td><td class="num">200</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="devil" data-group="Daily content">
+      <h2>Devil Square <span class="where">prontera 138,176</span></h2>
+      <p>A wave-survival arena that opens <strong>every 2 hours</strong> (00:00, 02:00, 04:00 ... 22:00 server time). You need <strong>Base Level 70</strong> and a 100,000z entry fee. Clear the waves of monsters to open treasure chests with items, equipment and cards. If you die, you're out until the next opening.</p>
+      <p>You get <strong>1 to 20 Devil Square Points</strong> when you leave. Spend them in the Devil Square Shop at the Guardian.</p>
+      <div class="tbl"><table>
+        <thead><tr><th>Devil Square Shop</th><th class="num">Points</th></tr></thead>
+        <tbody>
+          <tr><td>Battle Manual, JOB Battle Manual</td><td class="num">5</td></tr>
+          <tr><td>Field Manual 300%, Bubble Gum</td><td class="num">50</td></tr>
+          <tr><td>VIP 1 Day</td><td class="num">80</td></tr>
+          <tr><td>Headgears (Sloth Hat, Baby Dragon Hat, Ice Wing Ear, Pig Moneybox, Toy Syringe and more)</td><td class="num">100</td></tr>
+          <tr><td>Unlimited Fly Wing 3 Day Box</td><td class="num">100</td></tr>
+          <tr><td>Falconer Claw / Flute / Glove, Flying Galapago</td><td class="num">150</td></tr>
+          <tr><td>CD In Mouth</td><td class="num">200</td></tr>
+          <tr><td>Costume Adventure Bag, Costume Alice's Broom, Costume Beer Server</td><td class="num">250</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- ===================== BOSSES ===================== -->
+    <section id="worldboss" data-group="Bosses and PvP">
+      <h2>World Boss <span class="where">prontera 136,171</span></h2>
+      <p>Every monster anyone kills adds 1 soul to the server's soul count. At <strong>15,000 souls</strong>, any level 99 player can summon the World Boss at the World Boss NPC. It appears on a random field (Juno, Einbroch, Lighthalzen and more) with guardians and stays for 1 hour.</p>
+      <ul>
+        <li>Everyone who deals more than <strong>100,000 damage</strong> gets rewards by mail.</li>
+        <li>Always: 17 to 25 MVP Soul. Top damage dealer: 10 to 15 extra MVP Soul.</li>
+        <li>Chance drops: Fallen Angel Wing (1%), Bloody Branch, Enriched Elunium/Oridecon (5%), and 10% each for Kafra Card, LV10 Blessing/Agil Scrolls, Acid Bomb box, Poison Bottles, Yggdrasil Berry Box, Infinite Fly Wing and VIP 1 Day.</li>
+        <li>Only one character per computer on the boss map.</li>
+      </ul>
+    </section>
+
+    <section id="mvp" data-group="Bosses and PvP">
+      <h2>MVPs, MVP Rank and extra drops</h2>
+      <ul>
+        <li><strong>MVP List</strong> (prontera 157,198) shows which MVPs are alive and when the dead ones respawn.</li>
+        <li><strong>MvP Rank</strong> (prontera 140,182) ranks MVP kills each month. The top 3 get mail at the start of the next month:</li>
+      </ul>
+      <div class="tbl"><table>
+        <thead><tr><th>Rank</th><th class="num">MVP Soul</th><th class="num">Yggdrasil Berry 10 Box</th><th class="num">Bloody Branch</th></tr></thead>
+        <tbody>
+          <tr><td>1st</td><td class="num">100</td><td class="num">5</td><td class="num">3</td></tr>
+          <tr><td>2nd</td><td class="num">50</td><td class="num">3</td><td class="num">2</td></tr>
+          <tr><td>3rd</td><td class="num">30</td><td class="num">2</td><td class="num">1</td></tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li><strong>Extra costume drops:</strong> about 80 monsters have a 0.3% chance to drop a bonus costume. Ask the <strong>Extra Drop Info</strong> NPC (prontera 164,170) which monster drops what. Costumes from monsters can't be traded.</li>
+        <li>On MVP maps you can only have <strong>one character per computer</strong>. A second one gets sent out.</li>
+      </ul>
+    </section>
+
+    <section id="woe" data-group="Bosses and PvP">
+      <h2>War of Emperium <span class="where">WOE Information, prontera 149,193</span></h2>
+      <div class="note gold"><strong>Schedule:</strong> every <strong>Wednesday, 20:00 to 21:00</strong> server time. The castle is <strong>Himinn</strong> (schg_cas01). Pick <em>WoE Castle [Himinn]</em> in the Warper to get there.</div>
+      <ul>
+        <li>The guild that holds the castle when WoE ends gets the castle reward.</li>
+        <li><strong>WoE contributor reward:</strong> anyone who really took part can claim a reward at the WOE Information NPC for up to 6 days after WoE, even if they were offline when it ended. You need <strong>15 minutes of active time</strong> on the castle map (AFK time doesn't count) <em>and</em> at least one of: a player kill, 5,000 damage, 5,000 healing on guild/alliance members, or 10 support skills on them.</li>
+        <li>Contributor reward: 10,000,000z, 20 Acid Bomb 10 Box, 5 Poison Bottle 5 Box, 2 Cash Point[10], 10 Light White Potion Box, 10 Blue Potion Box. One claim per computer each WoE.</li>
+        <li><strong>Rankings:</strong> <code>@woerank</code> shows the player ranking (rating goes up and down with kills and deaths). The WOE Information NPC also shows guild stats for the last WoE and all time, and your own stats.</li>
+      </ul>
+    </section>
+
+    <section id="pvp" data-group="Bosses and PvP">
+      <h2>PvP</h2>
+      <p>PvP kills are tracked on the <strong>Ladder</strong> (prontera 166,198) and with <code>@pvpladder</code>. The <strong>PvP-StatsViewer</strong> (prontera 147,163) shows your own PvP stats. Getting a kill (or dying) on a PvP map also completes the PvP task of the <a href="#daily">Daily Quest</a>.</p>
+    </section>
+
+    <!-- ===================== PROGRESSION ===================== -->
+    <section id="battlepass" data-group="Progression">
+      <h2>Battle Pass <span class="where">prontera 164,166</span></h2>
+      <p>The Battle Pass runs in <strong>seasons</strong> started by the GMs. While a season is active, you earn Battle Pass points and claim a reward at each of the <strong>50 levels</strong>. Level 1 needs 1,000 points and level 50 needs 65,700.</p>
+      <ul>
+        <li><strong>Sell loot:</strong> the BattlePass Manager buys common monster loot for points.</li>
+        <li><strong>Sell MVP materials:</strong> MVP drops are worth 50 to 10,000 points each.</li>
+        <li><strong>Refined gear:</strong> trade in Level 4 weapons and armor at +7 or higher for refine level x 50 points.</li>
+        <li>Rewards include Enriched ores, potions, MVP Soul, Cash Points at levels 5, 35 and 48, a Fallen Angel Wing at level 49 and Costume Dark Lord Cloak at level 50.</li>
+      </ul>
+    </section>
+
+    <section id="questshop" data-group="Progression">
+      <h2>Quest Shop (headgear crafting) <span class="where">prontera 147,166</span></h2>
+      <p>The Quest Shop crafts classic headgears from monster loot. Pick a quest page (Quest I to VIII), choose a headgear, and it shows the items you need. You can preview the headgear before you make it. Every Quest Shop headgear also appears in the <a href="#daily">Daily Point Shop</a> rotation.</p>
+    </section>
+
+    <section id="gear" data-group="Progression">
+      <h2>Equipment services</h2>
+      <div class="tbl"><table>
+        <thead><tr><th>Service</th><th>Where</th><th>Details</th></tr></thead>
+        <tbody>
+          <tr><td>Costume Enchanter</td><td>prontera 138,223</td><td>Rolls 4 enchants on a costume upper, middle or lower at once. Each slot: 80% Tier 1, 19% Tier 2, 1% Tier 3. Costs 5 MVP Soul + 500,000z. Re-enchant as often as you like (it replaces all 4). Bound costumes stay bound the same way.</td></tr>
+          <tr><td>Fallen Angel Wing enchant</td><td>Fallen Luhir, prontera 140,125</td><td>Adds enchants to a Fallen Angel Wing for 1,000,000z. Higher refine opens more slots, and refine 9+ allows a special enchant.</td></tr>
+          <tr><td>Refine Master</td><td>prt_in 56,54</td><td>Uses a Refine Ticket to refine with no chance of failure, up to the ticket's level.</td></tr>
+          <tr><td>Card remover</td><td>Wise Old Woman, prt_in 28,73</td><td>Removes all cards from an item for a flat 1,000,000z. It can fail, but a failure never destroys anything.</td></tr>
+          <tr><td>Reset Girl</td><td>Kafra Employee</td><td>Reset skills, stats, or both for 5,000,000z each.</td></tr>
+          <tr><td>Plagiarism Master</td><td>prontera 128,213</td><td>Rogue/Stalker: choose which skill Plagiarism keeps, for 500,000z.</td></tr>
+          <tr><td>Item signer</td><td>Perchik, prt_in 24,61</td><td>Signs your name on slotless equipment.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <section id="pets" data-group="Progression">
+      <h2>Pets</h2>
+      <ul>
+        <li><strong>Every pet can auto-feed.</strong> Tick the auto-feed box in the pet window and keep its food in your inventory.</li>
+        <li>Pet Groomers in town sell 22 taming items that have no other source on this server for 100,000z each.</li>
+      </ul>
+    </section>
+
+    <!-- ===================== VIP ===================== -->
+    <section id="vip" data-group="VIP and Cash Shop">
+      <h2>VIP <span class="where">VIP Account, prontera 147,174</span></h2>
+      <div class="tbl"><table>
+        <thead><tr><th>VIP perk</th><th>Normal</th><th>VIP</th></tr></thead>
+        <tbody>
+          <tr><td>Base and Job EXP</td><td>5x</td><td>+50%</td></tr>
+          <tr><td>Item drop rate</td><td>Normal</td><td>+50%</td></tr>
+          <tr><td>Character slots</td><td>9</td><td>15</td></tr>
+          <tr><td>Extra storages</td><td>Storage</td><td>+ VIP Storage 1 to 6 (at the Kafra)</td></tr>
+          <tr><td>Gemstones for skills</td><td>Needed</td><td>Not needed</td></tr>
+          <tr><td>Hourly Points</td><td>1 per hour</td><td>2 per hour</td></tr>
+          <tr><td>Daily VIP reward</td><td>-</td><td>Claim a random item every 24 hours at the VIP Account NPC</td></tr>
+        </tbody>
+      </table></div>
+      <ul>
+        <li>Buy VIP at the VIP Account NPC for <strong>2 Cash Points per day</strong>, or in the Cash Shop (1 day 2 CP, 7 days 15 CP, 30 days 50 CP).</li>
+        <li>Free VIP: 3 days from Freebies, VIP 1 Day from Devil Square (80 pts) and the World Boss, VIP 7 Days from the Hourly shop (200 pts).</li>
+        <li>When VIP runs out, you can still take items out of VIP Storage, but you can't put new ones in.</li>
+      </ul>
+    </section>
+
+    <section id="cash" data-group="VIP and Cash Shop">
+      <h2>Cash Shop and Cash Points</h2>
+      <p>Open the Cash Shop from the button in your game window. It sells VIP, Autohunt Time tickets, convenience boxes (stat dishes, converters, weight boosts), and costume and headgear items. Cash Points (CP) come from donations and from in-game sources:</p>
+      <ul>
+        <li>WoE contributor reward: 2 Cash Point[10] each WoE.</li>
+        <li>Battle Pass: Cash Point[1000] x2 at levels 5, 35 and 48 (when a season is running).</li>
+        <li>Event rewards and GM promo codes (claim them at the Kafra, <em>Promotional Code</em>).</li>
+      </ul>
+      <p>Cash Point items (10 / 100 / 1000 / 10000) turn into CP when you use them.</p>
+    </section>
+
+    <!-- ===================== EVENTS ===================== -->
+    <section id="events" data-group="Events">
+      <h2>Events</h2>
+      <h3>7 Nights of Jack <span class="tag">until Nov 15, 2026</span></h3>
+      <p>Talk to <strong>Jack the Pumpkin Keeper</strong> (prontera 159,183) or type <code>@halloween</code>. Clear <strong>one night per day</strong> (resets at 00:00) by hunting monsters, finding Pumpkin Ghosts in Payon, Geffen, Alberta and Morocc, and bringing items. Each night gives Pumpkin Candy, EXP and items. Spend candy in Jack's Candy Shop.</p>
+      <p>After all 7 nights you get a <strong>random Halloween headgear costume, a random costume garment</strong>, 5 Cash Point[10], 10 Elite Siege Supply Box, 10 Token of Siegfried and 100 MVP Soul. Missing a day doesn't reset anything. Progress is per account, and only one account per computer can do the event.</p>
+      <h3>Regular events</h3>
+      <ul>
+        <li><strong>Weekend Double EXP</strong> every Friday 00:00 to Monday 00:00.</li>
+        <li><strong>Devil Square</strong> every 2 hours.</li>
+        <li><strong>Cluckers</strong>: a GM-run chicken hunt in Prontera with a prize.</li>
+      </ul>
+    </section>
+
+    <section id="rules" data-group="Events">
+      <h2>Fair play rules</h2>
+      <div class="note warn"><strong>Read this:</strong> Legacia uses Gepard Shield. Third-party bots are not allowed. Use <code>@ah</code> instead.</div>
+      <ul>
+        <li>The client allows <strong>2 logins per computer</strong>.</li>
+        <li>Many rewards are limited <strong>per computer</strong>, not just per account: Freebies, Daily Quest, the Halloween event, promo codes, autohunt free time, MVP drop share and the WoE contributor reward.</li>
+        <li>One character per computer on MVP maps and on the World Boss map.</li>
+        <li>Costumes from the Gacha Machine and from monsters can't be traded.</li>
+        <li>Don't feel pressured to donate. Legacia is free to play.</li>
+      </ul>
+    </section>
+
+    <p class="foot">Legacia RO Wiki. Built from the server's own scripts and settings, November 2026.</p>
+  </main>
+</div>
+
+<script>
+(function () {
+  var sections = Array.prototype.slice.call(document.querySelectorAll("main section"));
+  var list = document.getElementById("toclist");
+  var links = {};
+  var lastGroup = "";
+  sections.forEach(function (s) {
+    var g = s.getAttribute("data-group");
+    if (g !== lastGroup) {
+      var gl = document.createElement("li");
+      gl.className = "grp"; gl.textContent = g; gl.setAttribute("data-grp", g);
+      list.appendChild(gl); lastGroup = g;
+    }
+    var h = s.querySelector("h2");
+    var title = h.childNodes[0].textContent.trim();
+    var li = document.createElement("li");
+    var a = document.createElement("a");
+    a.href = "#" + s.id; a.textContent = title;
+    li.appendChild(a); li.setAttribute("data-sec", s.id); li.setAttribute("data-g", g);
+    list.appendChild(li); links[s.id] = a;
+    s._text = s.textContent.toLowerCase();
+  });
+
+  // Close the chapter list on phones after picking one.
+  var toc = document.getElementById("toc");
+  if (window.matchMedia("(max-width: 860px)").matches) toc.open = false;
+  list.addEventListener("click", function (e) {
+    if (e.target.tagName === "A" && window.matchMedia("(max-width: 860px)").matches) toc.open = false;
+  });
+
+  // Search filters chapters.
+  var q = document.getElementById("q");
+  var none = document.getElementById("noresult");
+  q.addEventListener("input", function () {
+    var v = q.value.trim().toLowerCase();
+    var shownGroups = {}; var any = false;
+    sections.forEach(function (s) {
+      var hit = !v || s._text.indexOf(v) !== -1;
+      s.hidden = !hit;
+      list.querySelector('[data-sec="' + s.id + '"]').hidden = !hit;
+      if (hit) { shownGroups[s.getAttribute("data-group")] = true; any = true; }
+    });
+    Array.prototype.forEach.call(list.querySelectorAll(".grp"), function (g) {
+      g.hidden = !shownGroups[g.getAttribute("data-grp")];
+    });
+    none.hidden = any;
+    if (v && window.matchMedia("(max-width: 860px)").matches) toc.open = true;
+  });
+
+  // Highlight the chapter in view.
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) {
+          Object.keys(links).forEach(function (k) { links[k].classList.toggle("on", k === en.target.id); });
+        }
+      });
+    }, { rootMargin: "-20% 0px -70% 0px" });
+    sections.forEach(function (s) { io.observe(s); });
+  }
+})();
+</script>
+
+</body>
+</html>
