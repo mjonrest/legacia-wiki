@@ -66,5 +66,6 @@ jobs:
             mkdir -p -f $FTP_DIR;
             cd $FTP_DIR;
             put index.html;
+            put poster.jpg;
             bye"
           echo "Uploaded index.html to $FTP_DIR"
