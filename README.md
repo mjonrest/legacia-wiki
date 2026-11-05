@@ -14,7 +14,7 @@ Set it up once in Settings > Secrets and variables > Actions:
 - Secrets: `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD` (the same details WinSCP uses).
 - Variable: `FTP_DIR`, the folder to upload into, e.g. `domains/<your domain>/public_html/wiki`.
   The wiki is then at `https://<your domain>/wiki/`.
-- Optional variable: `FTP_PROTOCOL` = `ftps` if your host needs it (default `ftp`).
+- Optional variables: `FTP_PROTOCOL` = `ftp` (default), `ftps` or `sftp` (match WinSCP's "File protocol"); `FTP_PORT` if WinSCP uses a non-standard port.
 
 Until these are set, the workflow skips the upload with a warning.
 

@@ -7,8 +7,9 @@
 #   FTP_PASSWORD  FTP password
 # and this repository variable (same page, Variables tab):
 #   FTP_DIR       folder on the host to upload into, e.g. domains/legacia.example/public_html/wiki
-# Optional variable:
-#   FTP_PROTOCOL  ftp (default) or ftps
+# Optional variables:
+#   FTP_PROTOCOL  ftp (default), ftps, or sftp (use what WinSCP shows as "File protocol")
+#   FTP_PORT      port, if WinSCP uses a non-standard one (defaults: ftp/ftps 21, sftp 22)
 name: Deploy to web host
 
 on:
@@ -51,10 +52,15 @@ jobs:
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           FTP_DIR: ${{ vars.FTP_DIR }}
           FTP_PROTOCOL: ${{ vars.FTP_PROTOCOL || 'ftp' }}
+          FTP_PORT: ${{ vars.FTP_PORT }}
         run: |
+          URL="$FTP_PROTOCOL://$FTP_SERVER"
+          if [ -n "$FTP_PORT" ]; then URL="$URL:$FTP_PORT"; fi
           # Only the site files go up: README, .github and .git stay out.
-          lftp -u "$FTP_USERNAME,$FTP_PASSWORD" "$FTP_PROTOCOL://$FTP_SERVER" -e "
+          lftp -u "$FTP_USERNAME,$FTP_PASSWORD" "$URL" -e "
             set ftp:ssl-allow yes;
+            set sftp:auto-confirm yes;
+            set net:timeout 20;
             set ssl:verify-certificate no;
             set net:max-retries 3;
             mkdir -p -f $FTP_DIR;
