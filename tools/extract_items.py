@@ -81,9 +81,6 @@ for var,lab,cost in [('top','Costume Headgear gacha','10 Activity Points, 10% wi
 # PvP shop (Ladder)
 for p in re.search(r'^-\tpointshop\tPvP_Cash_Shop#cash\t-1,#PvpPoints,(.*)$',L('npc/miracle/s_pvp_rank.txt'),re.M).group(1).strip().split(','):
     i,pr=map(int,p.split(':')); add(i,'PvP Shop','Ladder, prontera 166,198 (PvP Shops)','%d PvP Points'%pr)
-# Pet groomer
-for p in '14569 14570 14571 14572 14573 14574 12358 12359 12360 12361 12362 12363 12364 12365 12366 12367 12368 12369 12370 12371 12372 12357'.split():
-    add(int(p),'Pet Groomer','Prontera, Geffen, Payon, Izlude, Morroc, Juno, Lighthalzen','100,000z')
 # Extra mob drops
 md=L('npc/miracle/mob_drop.txt')
 mob=[int(x) for x in re.search(r'setarray \.@MobID\[0\],([^;]*);',md).group(1).split(',')]
@@ -96,6 +93,89 @@ for f in ['db/pre-re/mob_db.yml','db/import/mob_db.yml']:
     except Exception as e: print('mob',f,e)
 for a,b in zip(mob,drop):
     add(b,'Monster drop','%s (bonus drop)'%mobdb.get(a,'Monster %d'%a),'0.3% drop','Server-wide announce when it drops')
+# Town shops: every loaded zeny shop with a map position (Pet Groomers included)
+def loaded_npc_files():
+    out=[]; seen=set()
+    def walk(conf):
+        try: lines=L(conf).splitlines()
+        except Exception: return
+        for line in lines:
+            line=line.split('//')[0].strip()
+            m=re.match(r'(npc|import|delnpc):\s*(.+)',line)
+            if not m: continue
+            k,v=m.group(1),m.group(2).strip()
+            if k=='import': walk(v)
+            elif k=='npc' and v not in seen: seen.add(v); out.append(v)
+            elif k=='delnpc' and v in seen: out.remove(v); seen.discard(v)
+    walk('npc/pre-re/scripts_main.conf'); walk('npc/scripts_custom.conf')
+    return out
+LOADED=loaded_npc_files()
+TOWN=[('prt_church','Prontera'),('prt_in','Prontera'),('prt_monk','Prontera'),('prt_fild','Prontera field'),('prontera','Prontera'),('izlude','Izlude'),('alb2trea','Alberta'),('alberta','Alberta'),('aldeba','Al De Baran'),('alde_alche','Al De Baran'),('aldebaran','Al De Baran'),('ama','Amatsu'),('que_ng','Amatsu'),('ayo','Ayothaya'),('cmd_fild','Comodo field'),('cmd','Comodo'),('comodo','Comodo'),('ein','Einbroch'),('geffen','Geffen'),('gonryun','Kunlun'),('hu_in','Hugel'),('hugel','Hugel'),('jawaii','Jawaii'),('yuno','Juno'),('lighthalzen','Lighthalzen'),('lhz','Lighthalzen'),('lou','Louyang'),('xmas','Lutie'),('in_moc','Morroc'),('moc_ruins','Morroc'),('morocc','Morroc'),('mosk','Moscovia'),('moscovia','Moscovia'),('nif','Niflheim'),('niflheim','Niflheim'),('payon','Payon'),('ra_in','Rachel'),('rachel','Rachel'),('tur_dun','Turtle Island'),('um','Umbala'),('umbala','Umbala'),('ve_in','Veins'),('cave','Morroc')]
+HIDDEN_SHOP={'Weapon Dealer#prt20':'prt_in,172,130','Armor Dealer#prt20':'prt_in,172,132'}
+for f in LOADED:
+    if not (f.endswith('merchants/shops.txt') or f.endswith('quests/quests_morocc.txt')): continue
+    for m in re.finditer(r'^([^/\t\n][^\t\n]*)\tshop\t([^\t\n]+)\t([^\n]*)$',L(f),re.M):
+        loc,name,body=m.groups()
+        if loc=='-':
+            if name not in HIDDEN_SHOP: continue
+            loc=HIDDEN_SHOP[name]
+        mp,x,y=loc.split(',')[:3]
+        if mp.startswith('brasilis'): continue   # city not loaded, warper blocks it
+        town=next((tw for pre,tw in TOWN if mp.startswith(pre)),mp)
+        npc=name.split('#')[0]
+        src='Pet Groomer' if npc=='Pet Groomer' else 'Town Shop'
+        body=re.split(r'\s*//',body)[0].split('\t')[0]
+        for part in body.split(',')[1:]:
+            part=part.strip()
+            if not part: continue
+            i,pr=map(int,part.split(':')[:2])
+            if pr==-1: pr=buy(i)
+            add(i,src,'%s, %s %s,%s (%s)'%(npc,mp,x,y,town),'{:,}z'.format(pr))
+# Monster drops: every monster that spawns on a loaded map, with server drop rates (conf/battle/drops.conf)
+def conf_val(k,default):
+    m=re.search(r'^'+k+r':\s*(\d+)',L('conf/battle/drops.conf'),re.M)
+    return int(m.group(1)) if m else default
+spawn={}
+for f in LOADED:
+    try: t=L(f)
+    except Exception: continue
+    for m in re.finditer(r'^([a-z0-9_@]+),[^\t\n]*\t(?:boss_)?monster\t[^\t\n]*\t(\d+),(\d+)',t,re.M):
+        c=spawn.setdefault(int(m.group(2)),{})
+        c[m.group(1)]=c.get(m.group(1),0)+int(m.group(3))
+spawn={k:sorted(v,key=lambda mp:-v[mp]) for k,v in spawn.items()}   # maps with the most of this monster first
+mobfull={}
+for f in ['db/pre-re/mob_db.yml','db/import/mob_db.yml']:
+    try:
+        d=yaml.safe_load(L(f))
+        for mm in d.get('Body') or []: mobfull.setdefault(mm['Id'],{}).update(mm)
+    except Exception as e: print('mob',f,e)
+aeg_all={str(v.get('AegisName')).lower():k for k,v in items.items()}
+def kind(i):
+    t=items.get(i,{}).get('Type','')
+    if t=='Healing': return 'heal'
+    if t in ('Usable','Delayconsume','Cash'): return 'use'
+    if t in ('Weapon','Armor','Petarmor','Shadowgear'): return 'equip'
+    if t=='Card': return 'card'
+    return 'common'
+cap=conf_val('drop_rate_cap',9000)
+for mid,maps in spawn.items():
+    mm=mobfull.get(mid)
+    if not mm: continue
+    mvp=bool(mm.get('MvpExp')); boss=mvp or mm.get('Class')=='Boss'
+    where='%s (Lv %s), %s'%(mm.get('Name'),mm.get('Level',1),', '.join(maps[:3])+(' +%d more'%(len(maps)-3) if len(maps)>3 else ''))
+    for dr in mm.get('Drops') or []:
+        i=aeg_all.get(str(dr['Item']).lower())
+        if not i: continue
+        k=kind(i); suf='_mvp' if mvp else '_boss' if boss else ''
+        r=dr['Rate']*conf_val('item_rate_'+k+suf,100)//100
+        r=max(conf_val('item_drop_'+k+'_min',1),min(conf_val('item_drop_'+k+'_max',10000),r))
+        r=min(r,cap)
+        add(i,'Monster drop',where,('%.2f'%(r/100)).rstrip('0').rstrip('.')+'% drop')
+    for dr in mm.get('MvpDrops') or []:
+        i=aeg_all.get(str(dr['Item']).lower())
+        if not i: continue
+        r=max(1,min(10000,dr['Rate']*conf_val('item_rate_mvp',100)//100))
+        add(i,'Monster drop',where,('%.2f'%(r/100)).rstrip('0').rstrip('.')+'% MVP reward')
 # Cash shop
 for f in ['db/item_cash.yml','db/import/item_cash.yml']:
     d=yaml.safe_load(L(f)) or {}
