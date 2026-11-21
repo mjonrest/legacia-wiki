@@ -78,6 +78,9 @@ for var,lab,cost in [('top','Costume Headgear gacha','10 Activity Points, 10% wi
     body=re.sub(r'//[^\n]*','',m.group(1))
     for i in dict.fromkeys(int(x) for x in re.findall(r'\d+',body)):
         add(i,'Gacha Machine','prontera 131,216 ('+lab+')',cost,'Random prize, account bound')
+# PvP shop (Ladder)
+for p in re.search(r'^-\tpointshop\tPvP_Cash_Shop#cash\t-1,#PvpPoints,(.*)$',L('npc/miracle/s_pvp_rank.txt'),re.M).group(1).strip().split(','):
+    i,pr=map(int,p.split(':')); add(i,'PvP Shop','Ladder, prontera 166,198 (PvP Shops)','%d PvP Points'%pr)
 # Pet groomer
 for p in '14569 14570 14571 14572 14573 14574 12358 12359 12360 12361 12362 12363 12364 12365 12366 12367 12368 12369 12370 12371 12372 12357'.split():
     add(int(p),'Pet Groomer','Prontera, Geffen, Payon, Izlude, Morroc, Juno, Lighthalzen','100,000z')
