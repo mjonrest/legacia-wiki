@@ -9,7 +9,7 @@ def L(p):
 items={}
 files=['db/pre-re/item_db_usable.yml','db/pre-re/item_db_equip.yml','db/pre-re/item_db_etc.yml',
  'db/import/item_db.yml','db/import/item_db_ex.yml','db/import/item_db_costume_legacy.yml','db/import/item_db_elite.yml',
- 'db/import/item_db_other.yml','db/import/item_db_costume.yml','db/import/item_headgear.yml']
+ 'db/import/item_db_other.yml','db/import/item_db_costume.yml','db/import/item_headgear.yml','db/import/item_db_legacia.yml']
 for f in files:
     try: d=yaml.safe_load(L(f).replace('\t','  '))
     except Exception as e: print('ERR',f,e); continue
@@ -131,6 +131,14 @@ for f in LOADED:
             i,pr=map(int,part.split(':')[:2])
             if pr==-1: pr=buy(i)
             add(i,src,'%s, %s %s,%s (%s)'%(npc,mp,x,y,town),'{:,}z'.format(pr))
+# Legacy Shard Exchange (Archivist Sera, Legacia story): weapons + guns 50 shards, utility headgears 150
+hc=L('npc/miracle/legacia_story/hollow_crown_part1.txt')
+pm=re.search(r'setarray \.price\[0\],\s*(\d+),\s*(\d+);',hc)
+pw,ph=(int(pm.group(1)),int(pm.group(2))) if pm else (50,150)
+exw=list(range(60001,60022))+[int(x) for x in re.findall(r'\d+',(re.search(r'setarray \.ex_weapons\[getarraysize\(\.ex_weapons\)\],([^;]*);',hc) or re.search('()','')).group(1))]
+exh=[int(x) for x in re.findall(r'\d+',(re.search(r'setarray \.ex_heads\[0\],([^;]*);',hc) or re.search('()','')).group(1))]
+for i in exw: add(i,'Shard Exchange','Archivist Sera, prt_castle 125,51 (Legacia story)','%d Legacy Shards'%pw)
+for i in exh: add(i,'Shard Exchange','Archivist Sera, prt_castle 125,51 (Legacia story)','%d Legacy Shards'%ph)
 # Monster drops: every monster that spawns on a loaded map, with server drop rates (conf/battle/drops.conf)
 def conf_val(k,default):
     m=re.search(r'^'+k+r':\s*(\d+)',L('conf/battle/drops.conf'),re.M)
